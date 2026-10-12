@@ -44,14 +44,19 @@ select option{color:#000}::placeholder{color:rgba(255,255,255,.6)}
 .msg{max-width:78%;padding:1.2vh 2vh;border-radius:20px;font-size:2.2vh;white-space:pre-wrap;user-select:text}
 .msg.u{align-self:flex-end;background:var(--a);color:#111}.msg.m{align-self:flex-start;background:rgba(255,255,255,.2)}
 #wx,#chip{cursor:pointer}
-#det{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.4);display:none;place-items:center}#det.show{display:grid}
-#det .glass{position:relative;width:min(860px,92vw);max-height:90vh;overflow:auto;padding:3vh;background:rgba(40,40,55,.55);touch-action:pan-y}
-#det .x{position:absolute;top:1.6vh;right:2vh;font-size:2.6vh;width:5vh;height:5vh;border-radius:50%;background:var(--g)}
-.dh{display:flex;justify-content:space-between;align-items:center;gap:2vh;margin:0 6vh 2vh 0}.big{font-size:8vh;font-weight:500}
-.hrs{display:flex;gap:1vh;overflow-x:auto;padding-bottom:1vh;touch-action:pan-x}
-.hrs>div{flex:0 0 9vh;text-align:center;padding:1.2vh 0;border-radius:18px;background:rgba(255,255,255,.14);display:flex;flex-direction:column;gap:.4vh;font-size:2.2vh}.hrs small{font-size:1.6vh;opacity:.75}
-.stg{display:grid;grid-template-columns:repeat(4,1fr);gap:1vh;margin:1.6vh 0}.stg .item{margin:0}
-.dys>div{display:grid;grid-template-columns:1fr 1fr 1fr 1.4fr;padding:1.2vh 2vh;margin-bottom:.8vh;border-radius:16px;background:rgba(255,255,255,.14);font-size:2.2vh}.dys span:last-child{text-align:right}
+#det{position:fixed;inset:0;z-index:50;display:none;place-items:center;background:rgba(0,0,0,0);transition:background .45s}#det.show{display:grid}#det.bk{background:rgba(0,0,0,.45)}
+#dp{position:relative;width:min(900px,94vw);height:90vh;overflow:auto;border-radius:36px;padding:4vh 3.4vw 3vh;border:1px solid rgba(255,255,255,.25);box-shadow:0 30px 80px rgba(0,0,0,.5);touch-action:pan-y;scrollbar-width:none;will-change:transform,opacity}
+#dp::-webkit-scrollbar{display:none}
+#dp .x{position:absolute;top:2vh;right:2.4vh;font-size:2.4vh;width:4.6vh;height:4.6vh;border-radius:50%;background:rgba(255,255,255,.22);backdrop-filter:blur(20px)}
+.hero{text-align:center;text-shadow:0 2px 14px rgba(0,0,0,.18)}.hero h2{font-size:4vh;font-weight:500;margin:0;text-transform:none}
+.bt{font-size:15vh;font-weight:200;line-height:1.05;padding-left:2.4vh}.hero div{font-size:2.5vh}
+.cd{background:rgba(255,255,255,.16);backdrop-filter:blur(25px);-webkit-backdrop-filter:blur(25px);border:1px solid rgba(255,255,255,.22);border-radius:24px;padding:2vh 2.2vh;margin-top:1.6vh}
+.cd h4{font-size:1.6vh;font-weight:600;opacity:.7;letter-spacing:.07em;text-transform:uppercase;margin-bottom:1.2vh}
+.hrs{display:flex;gap:.6vh;overflow-x:auto;scrollbar-width:none;touch-action:pan-x}.hrs>div{flex:0 0 9vh;text-align:center;display:flex;flex-direction:column;gap:.7vh;font-size:2.3vh}.hrs small{font-size:1.7vh;opacity:.8}.hrs span{font-size:3vh}
+.dr{display:grid;grid-template-columns:13vh 6vh 5vh 1fr 5vh;align-items:center;padding:1.1vh 0;border-top:1px solid rgba(255,255,255,.2);font-size:2.3vh}.dr:first-of-type{border:0}
+.dr span:first-child{text-transform:capitalize;font-weight:500}.dr small{opacity:.8;font-size:1.5vh;display:block}.dr span:nth-child(3){opacity:.65;text-align:right}.dr span:last-child{text-align:right}
+.tr{height:.8vh;border-radius:9px;background:rgba(255,255,255,.25);position:relative;margin:0 1.6vh}.tr i{position:absolute;top:0;bottom:0;border-radius:9px;background:linear-gradient(90deg,#6fd3ff,#ffd86b,#ff9a4d)}
+.tl{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6vh;margin-top:1.6vh}.tl .cd{margin:0}.tl .v{font-size:4.4vh;font-weight:400;margin-bottom:.6vh}.tl small{font-size:1.8vh;opacity:.85;display:block;line-height:1.3}
 /* settings & overlays */
 #set{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.4);display:none;place-items:center}
 #set.show{display:grid}#set .glass{width:min(620px,90vw);max-height:88vh;overflow:auto;padding:3vh;display:grid;gap:1.4vh;background:rgba(40,40,50,.55);touch-action:pan-y}
@@ -90,7 +95,7 @@ label{font-size:1.8vh;opacity:.8}
 <input type="file" id="sf" accept="image/*" style="display:none">
 <label>Colore d'accento</label><div class="sw" id="sw"></div>
 <button class="btn" id="ss">Salva e chiudi</button></div></div>
-<div id="det"><div class="glass"><button class="x">✕</button><div id="detc"></div></div></div>
+<div id="det"><div id="dp"><button class="x">✕</button><div id="detc"></div></div></div>
 
 <script>
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
@@ -142,14 +147,37 @@ async function weather(){try{let la,lo,name;
  W('wx',WX)}catch(e){}showWx()}
 function showWx(){if(!WX)return;const[i,t]=WC(WX.c);$('#wT').textContent=`${i} ${WX.t}°`;$('#chipT').textContent=WX.t+'°';
  $('#wD').textContent=`${WX.city} · ${t} · percepita ${WX.f}°`;lockNext()}
-function detail(){if(!WX||!WX.hours)return;const[i,t]=WC(WX.c);
- const st=[['💧','Umidità',WX.hum+'%'],['💨','Vento',WX.wind+' km/h'],['🌡️','Pressione',WX.press+' hPa'],['😎','Indice UV',WX.uv],['🌅','Alba',WX.sr],['🌇','Tramonto',WX.ss],['🌧️','Prob. pioggia',WX.rain+'%'],['☔','Precipitazioni',WX.sum+' mm']];
- $('#detc').innerHTML=`<div class="dh"><div><h2 style="margin:0">${esc(WX.city)}</h2><div style="opacity:.85;font-size:2.2vh">${t} · percepita ${WX.f}°</div></div><div class="big">${i} ${WX.t}°</div><div style="text-align:right;font-size:2.4vh">Max ${WX.max}°<br>Min ${WX.min}°</div></div>
- <div class="hrs">${WX.hours.map((x,k)=>`<div><small>${k?x.h+':00':'Ora'}</small><span>${WC(x.c)[0]}</span><b>${x.t}°</b><small>💧${x.p}%</small></div>`).join('')}</div>
- <div class="stg">${st.map(x=>`<div class="item"><div><small>${x[0]} ${x[1]}</small>${x[2]}</div></div>`).join('')}</div>
- <div class="dys">${WX.days.map((x,k)=>`<div><span>${k?new Date(x.d+'T12:00').toLocaleDateString('it-IT',{weekday:'long'}):'Oggi'}</span><span>${WC(x.c)[0]}</span><span>💧${x.p}%</span><span>${x.min}° / ${x.max}°</span></div>`).join('')}</div>`;
- $('#det').classList.add('show')}
-$('#wx').onclick=$('#chip').onclick=detail;$('#det').onclick=e=>{if(e.target.id==='det'||e.target.closest('.x'))$('#det').classList.remove('show')};
+function bgFor(c){const n=document.documentElement.dataset.th==='night';
+ if(c>=95)return n?'linear-gradient(#1b1d27,#3a3f52)':'linear-gradient(#444b5e,#6b7388)';
+ if(c>=71&&c<=77)return n?'linear-gradient(#26324a,#5a6b8c)':'linear-gradient(#7d95b5,#c4d2e4)';
+ if(c>=51)return n?'linear-gradient(#1f2633,#404d61)':'linear-gradient(#52637a,#8497ad)';
+ if(c>=45)return n?'linear-gradient(#2a3040,#555e70)':'linear-gradient(#7a8798,#aab4c2)';
+ return n?'linear-gradient(#0d1633,#2b3c78)':'linear-gradient(#2f72d4,#74b8fb)'}
+function detail(){const[i,t]=WC(WX.c),uv=WX.uv,ul=uv<3?'Basso':uv<6?'Moderato':uv<8?'Alto':uv<11?'Molto alto':'Estremo';
+ const gl=Math.min(...WX.days.map(x=>x.min)),gh=Math.max(...WX.days.map(x=>x.max)),rg=(gh-gl)||1,df=WX.f-WX.t;
+ $('#dp').style.background=bgFor(WX.c);
+ $('#detc').innerHTML=`<div class="hero"><h2>${esc(WX.city)}</h2><div class="bt">${WX.t}°</div><div>${i} ${t}</div><div>Max ${WX.max}°  Min ${WX.min}°</div></div>
+ <div class="cd"><h4>🕒 Previsioni orarie</h4><div class="hrs">${WX.hours.map((x,k)=>`<div><small>${k?x.h:'Ora'}</small><span>${WC(x.c)[0]}</span><b>${x.t}°</b>${x.p>=20?`<small>${x.p}%</small>`:''}</div>`).join('')}</div></div>
+ <div class="cd"><h4>📅 Prossimi giorni</h4>${WX.days.map((x,k)=>`<div class="dr"><span>${k?new Date(x.d+'T12:00').toLocaleDateString('it-IT',{weekday:'long'}):'Oggi'}</span><span>${WC(x.c)[0]}${x.p>=20?`<small>${x.p}%</small>`:''}</span><span>${x.min}°</span><div class="tr"><i style="left:${(x.min-gl)/rg*100}%;width:${Math.max(10,(x.max-x.min)/rg*100)}%"></i></div><span>${x.max}°</span></div>`).join('')}</div>
+ <div class="tl">
+ <div class="cd"><h4>😎 Indice UV</h4><div class="v">${uv}</div><small>${ul}</small></div>
+ <div class="cd"><h4>🌅 Alba e tramonto</h4><div class="v">${WX.sr}</div><small>Tramonto alle ${WX.ss}</small></div>
+ <div class="cd"><h4>💨 Vento</h4><div class="v">${WX.wind}<small style="display:inline"> km/h</small></div><small>${WX.wind<12?'Brezza leggera':WX.wind<29?'Vento moderato':'Vento forte'}</small></div>
+ <div class="cd"><h4>🌧️ Precipitazioni</h4><div class="v">${WX.sum} mm</div><small>Probabilità oggi ${WX.rain}%</small></div>
+ <div class="cd"><h4>🌡️ Percepita</h4><div class="v">${WX.f}°</div><small>${df<0?'Più fresca della temperatura reale':df>0?'Più calda della temperatura reale':'Simile alla temperatura reale'}</small></div>
+ <div class="cd"><h4>💧 Umidità</h4><div class="v">${WX.hum}%</div><small>Pressione ${WX.press} hPa</small></div></div>`}
+/* animazione stile macOS: la finestra nasce dal widget e vi si richiude */
+let busy=false,src=null;
+function geo(){const a=(src||$('#wx')).getBoundingClientRect(),b=$('#dp').getBoundingClientRect();
+ return{dx:a.left+a.width/2-(b.left+b.width/2),dy:a.top+a.height/2-(b.top+b.height/2),sx:a.width/b.width,sy:a.height/b.height}}
+function openDet(e){if(!WX||!WX.hours||busy)return;src=e.currentTarget;detail();const det=$('#det'),dp=$('#dp');det.classList.add('show');dp.scrollTop=0;
+ const g=geo();busy=true;requestAnimationFrame(()=>det.classList.add('bk'));
+ const an=dp.animate([{transform:`translate(${g.dx}px,${g.dy}px) scale(${g.sx},${g.sy})`,opacity:0,borderRadius:'70px'},{offset:.5,opacity:1},{transform:'translate(0,0) scale(1)',opacity:1,borderRadius:'36px'}],{duration:700,easing:'cubic-bezier(.2,.9,.25,1.07)'});
+ an.onfinish=()=>busy=false}
+function closeDet(){const det=$('#det'),dp=$('#dp');if(busy||!det.classList.contains('show'))return;busy=true;const g=geo();det.classList.remove('bk');
+ const an=dp.animate([{transform:'none',opacity:1},{offset:.4,transform:`translate(${g.dx*.25}px,${g.dy*.3}px) scale(.8,.92)`,opacity:1},{transform:`translate(${g.dx}px,${g.dy}px) scale(${g.sx},${g.sy})`,opacity:0,borderRadius:'70px'}],{duration:480,easing:'cubic-bezier(.5,0,.75,.25)',fill:'forwards'});
+ an.onfinish=()=>{det.classList.remove('show');an.cancel();busy=false}}
+$('#wx').onclick=$('#chip').onclick=openDet;$('#det').onclick=e=>{if(e.target.id==='det'||e.target.closest('.x'))closeDet()};
 /* ---------- calendario ---------- */
 function cal(){const y=cur.getFullYear(),m=cur.getMonth(),f=(new Date(y,m,1).getDay()+6)%7,n=new Date(y,m+1,0).getDate(),td=iso(new Date());
  $('#mt').textContent=cur.toLocaleDateString('it-IT',{month:'long',year:'numeric'});let h=['L','M','M','G','V','S','D'].map(x=>`<b>${x}</b>`).join('')+'<i></i>'.repeat(f);
