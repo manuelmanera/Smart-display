@@ -40,14 +40,11 @@ h2{font-size:3.2vh;margin-bottom:2vh;font-weight:600;text-transform:capitalize}
 input,select{font:inherit;font-size:2.1vh;color:#fff;background:rgba(255,255,255,.14);border:1px solid var(--gb);border-radius:14px;padding:1.2vh 1.6vh;outline:0;width:100%}
 select option{color:#000}::placeholder{color:rgba(255,255,255,.6)}
 .btn{background:var(--a);color:#111;font-weight:600;border-radius:14px;padding:1.2vh 2.4vh;font-size:2.1vh}
-#chat{flex:1;overflow:auto;display:flex;flex-direction:column;gap:1vh;touch-action:pan-y}
-.msg{max-width:78%;padding:1.2vh 2vh;border-radius:20px;font-size:2.2vh;white-space:pre-wrap;user-select:text}
-.msg.u{align-self:flex-end;background:var(--a);color:#111}.msg.m{align-self:flex-start;background:rgba(255,255,255,.2)}
 #wx,#chip{cursor:pointer}
 #det{position:fixed;inset:0;z-index:50;display:none;place-items:center;background:rgba(0,0,0,0);transition:background .45s}#det.show{display:grid}#det.bk{background:rgba(0,0,0,.45)}
-#dp{position:relative;width:min(900px,94vw);height:90vh;overflow:auto;border-radius:36px;padding:4vh 3.4vw 3vh;border:1px solid rgba(255,255,255,.25);box-shadow:0 30px 80px rgba(0,0,0,.5);touch-action:pan-y;scrollbar-width:none;will-change:transform,opacity}
-#dp::-webkit-scrollbar{display:none}
-#dp .x{position:absolute;top:2vh;right:2.4vh;font-size:2.4vh;width:4.6vh;height:4.6vh;border-radius:50%;background:rgba(255,255,255,.22);backdrop-filter:blur(20px)}
+#dp,.gc{position:relative;width:min(900px,94vw);height:90vh;overflow:auto;border-radius:36px;padding:4vh 3.4vw 3vh;border:1px solid rgba(255,255,255,.25);box-shadow:0 30px 80px rgba(0,0,0,.5);touch-action:pan-y;scrollbar-width:none;will-change:transform,opacity}
+#dp::-webkit-scrollbar,.gc::-webkit-scrollbar{display:none}
+#dp .x,.gc .x{position:absolute;top:2vh;right:2.4vh;font-size:2.4vh;width:4.6vh;height:4.6vh;border-radius:50%;background:rgba(255,255,255,.22);backdrop-filter:blur(20px)}
 .hero{text-align:center;text-shadow:0 2px 14px rgba(0,0,0,.18)}.hero h2{font-size:4vh;font-weight:500;margin:0;text-transform:none}
 .bt{font-size:15vh;font-weight:200;line-height:1.05;padding-left:2.4vh}.hero div{font-size:2.5vh}
 .cd{background:rgba(255,255,255,.16);backdrop-filter:blur(25px);-webkit-backdrop-filter:blur(25px);border:1px solid rgba(255,255,255,.22);border-radius:24px;padding:2vh 2.2vh;margin-top:1.6vh}
@@ -57,6 +54,23 @@ select option{color:#000}::placeholder{color:rgba(255,255,255,.6)}
 .dr span:first-child{text-transform:capitalize;font-weight:500}.dr small{opacity:.8;font-size:1.5vh;display:block}.dr span:nth-child(3){opacity:.65;text-align:right}.dr span:last-child{text-align:right}
 .tr{height:.8vh;border-radius:9px;background:rgba(255,255,255,.25);position:relative;margin:0 1.6vh}.tr i{position:absolute;top:0;bottom:0;border-radius:9px;background:linear-gradient(90deg,#6fd3ff,#ffd86b,#ff9a4d)}
 .tl{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6vh;margin-top:1.6vh}.tl .cd{margin:0}.tl .v{font-size:4.4vh;font-weight:400;margin-bottom:.6vh}.tl small{font-size:1.8vh;opacity:.85;display:block;line-height:1.3}
+#gn{position:fixed;inset:0;z-index:55;pointer-events:none}.gs{position:absolute;left:0;top:0;overflow:hidden;transform-origin:0 0;will-change:transform}
+#gn .cd{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(255,255,255,.2)}
+.pad>#ga{padding:2.4vh 3vw;overflow:hidden;display:flex;flex-direction:column}
+#gh{display:flex;justify-content:space-between;align-items:center;font-size:2.6vh;font-weight:600}
+.gg{background:linear-gradient(90deg,#4f8cff,#a07bff,#ff7a9c);-webkit-background-clip:text;background-clip:text;color:transparent}
+#nw{font-size:1.9vh;padding:.8vh 1.8vh;border-radius:99px;background:rgba(255,255,255,.16);border:1px solid var(--gb)}
+#chat{flex:1;overflow:auto;display:flex;flex-direction:column;gap:1.2vh;padding:1.4vh .4vw;touch-action:pan-y;scrollbar-width:none}
+#hello{margin:auto;display:flex;flex-direction:column;align-items:center;gap:2.6vh}.gt{font-size:5.2vh;font-weight:500;text-align:center}
+#chips{display:flex;flex-wrap:wrap;gap:1.2vh;justify-content:center;max-width:70vw}#chips button{padding:1.2vh 2.2vh;border-radius:99px;font-size:2vh;background:rgba(255,255,255,.16);border:1px solid var(--gb);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.msg{max-width:74%;padding:1.3vh 2.2vh;border-radius:24px;font-size:2.2vh;line-height:1.4;user-select:text}
+.msg.u{align-self:flex-end;background:var(--a);color:#111;border-bottom-right-radius:8px;white-space:pre-wrap}.msg.m{align-self:flex-start;background:rgba(255,255,255,.2);border-bottom-left-radius:8px}
+.msg code{background:rgba(0,0,0,.25);padding:0 .6vh;border-radius:6px}
+.dots i{display:inline-block;width:1vh;height:1vh;margin:0 .35vh;border-radius:50%;background:#fff;animation:db 1s infinite ease-in-out}.dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
+@keyframes db{0%,80%,100%{opacity:.3;transform:translateY(0)}40%{opacity:1;transform:translateY(-.6vh)}}
+#gi{display:flex;align-items:center;gap:1vh;margin-top:1.2vh;padding:.8vh .8vh .8vh 2.4vh;border-radius:99px;background:rgba(255,255,255,.18);border:1px solid var(--gb)}
+#gi input{background:none;border:0;padding:1vh 0;flex:1;border-radius:0}
+#gi button{width:5.6vh;height:5.6vh;border-radius:50%;font-size:2.6vh;display:grid;place-items:center}#send{background:var(--a);color:#111;font-weight:700}#mic.rec{background:#ff4d4d}
 /* settings & overlays */
 #set{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.4);display:none;place-items:center}
 #set.show{display:grid}#set .glass{width:min(620px,90vw);max-height:88vh;overflow:auto;padding:3vh;display:grid;gap:1.4vh;background:rgba(40,40,50,.55);touch-action:pan-y}
@@ -81,15 +95,17 @@ label{font-size:1.8vh;opacity:.8}
 
 <section class="page" id="p2"><div class="pad"><div class="glass" style="flex:1"><div style="display:flex;justify-content:space-between"><h2>Notifiche</h2><button class="btn" id="nc">Pulisci</button></div><div id="nl"></div></div></div></section>
 
-<section class="page" id="p3"><div class="pad"><div class="glass" style="flex:1;display:flex;flex-direction:column;padding:2.4vh"><h2>Assistente Gemini</h2><div id="chat"></div>
-<div style="display:grid;grid-template-columns:1fr auto;gap:1vh;margin-top:1.4vh"><input id="q" placeholder="Chiedi di agenda, meteo, programmi…" autocomplete="off"><button class="btn" id="send">Invia</button></div></div></div></section>
+<section class="page" id="p3"><div class="pad"><div class="glass" id="ga">
+<div id="gh"><span><span class="gg">✦</span> <span class="gg">Gemini</span></span><button id="nw">Nuova chat</button></div>
+<div id="chat"><div id="hello"><div class="gt gg">Ciao, come posso aiutarti?</div><div id="chips"></div></div></div>
+<div id="gi"><input id="q" placeholder="Chiedi qualcosa a Gemini" autocomplete="off"><button id="mic">🎙️</button><button id="send">↑</button></div></div></div></section>
 
 <nav id="dock"><i></i></nav>
 
 <div id="set"><div class="glass">
 <h2>Impostazioni</h2>
 <label>Chiave API Gemini (resta solo su questo dispositivo)</label><input id="sk" type="password" placeholder="AIza…">
-<label>Modello Gemini</label><input id="sm" placeholder="gemini-2.5-flash">
+<label>Modello Gemini</label><input id="sm" placeholder="gemini-flash-latest">
 <label>Posizione meteo (vuoto = automatica via GPS)</label><input id="sc" placeholder="Automatica · oppure scrivi una città">
 <label>Sfondo</label><select id="sb"><option value="auto">Automatico (giorno/notte)</option><option value="day">Deserto giorno</option><option value="night">Deserto notte</option><option value="custom">Immagine personale…</option></select>
 <input type="file" id="sf" accept="image/*" style="display:none">
@@ -100,7 +116,7 @@ label{font-size:1.8vh;opacity:.8}
 <script>
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const L=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},W=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){alert('Memoria piena')}};
-const S=Object.assign({key:'',model:'gemini-2.5-flash',city:'',bg:'auto',acc:'#8ab4ff'},L('S',{}));
+const S=Object.assign({key:'',model:'gemini-flash-latest',city:'',bg:'auto',acc:'#8ab4ff'},L('S',{}));if(S.model==='gemini-2.5-flash')S.model='gemini-flash-latest';
 const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 let E=L('ev',{}),cur=new Date(),sel=iso(new Date()),WX=L('wx',null),NC=L('nc',[]);
 /* ---------- tema ---------- */
@@ -166,17 +182,27 @@ function detail(){const[i,t]=WC(WX.c),uv=WX.uv,ul=uv<3?'Basso':uv<6?'Moderato':u
  <div class="cd"><h4>🌧️ Precipitazioni</h4><div class="v">${WX.sum} mm</div><small>Probabilità oggi ${WX.rain}%</small></div>
  <div class="cd"><h4>🌡️ Percepita</h4><div class="v">${WX.f}°</div><small>${df<0?'Più fresca della temperatura reale':df>0?'Più calda della temperatura reale':'Simile alla temperatura reale'}</small></div>
  <div class="cd"><h4>💧 Umidità</h4><div class="v">${WX.hum}%</div><small>Pressione ${WX.press} hPa</small></div></div>`}
-/* animazione stile macOS: la finestra nasce dal widget e vi si richiude */
-let busy=false,src=null;
-function geo(){const a=(src||$('#wx')).getBoundingClientRect(),b=$('#dp').getBoundingClientRect();
- return{dx:a.left+a.width/2-(b.left+b.width/2),dy:a.top+a.height/2-(b.top+b.height/2),sx:a.width/b.width,sy:a.height/b.height}}
-function openDet(e){if(!WX||!WX.hours||busy)return;src=e.currentTarget;detail();const det=$('#det'),dp=$('#dp');det.classList.add('show');dp.scrollTop=0;
- const g=geo();busy=true;requestAnimationFrame(()=>det.classList.add('bk'));
- const an=dp.animate([{transform:`translate(${g.dx}px,${g.dy}px) scale(${g.sx},${g.sy})`,opacity:0,borderRadius:'70px'},{offset:.5,opacity:1},{transform:'translate(0,0) scale(1)',opacity:1,borderRadius:'36px'}],{duration:700,easing:'cubic-bezier(.2,.9,.25,1.07)'});
- an.onfinish=()=>busy=false}
-function closeDet(){const det=$('#det'),dp=$('#dp');if(busy||!det.classList.contains('show'))return;busy=true;const g=geo();det.classList.remove('bk');
- const an=dp.animate([{transform:'none',opacity:1},{offset:.4,transform:`translate(${g.dx*.25}px,${g.dy*.3}px) scale(.8,.92)`,opacity:1},{transform:`translate(${g.dx}px,${g.dy}px) scale(${g.sx},${g.sy})`,opacity:0,borderRadius:'70px'}],{duration:480,easing:'cubic-bezier(.5,0,.75,.25)',fill:'forwards'});
- an.onfinish=()=>{det.classList.remove('show');an.cancel();busy=false}}
+/* effetto genie stile macOS: la finestra è tagliata in strisce che si piegano verso il widget */
+let busy=false,src=null;const NS=28,eo=k=>1-Math.pow(1-k,4),eio=k=>k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;
+function genie(from,to,ms,ease,done){const dp=$('#dp'),b=dp.getBoundingClientRect(),a=(src||$('#wx')).getBoundingClientRect(),
+ g={px:b.left,py:b.top,pw:b.width,ph:b.height,sh:b.height/NS,pcx:b.left+b.width/2,tx:a.left+a.width/2,ty:a.top+a.height/2,sw:Math.max(a.width*.8,24)};g.dn=g.ty>g.py+g.ph/2;
+ const gn=document.createElement('div');gn.id='gn';const st=[];
+ for(let i=0;i<NS;i++){const w=document.createElement('div');w.className='gs';w.style.cssText=`width:${g.pw}px;height:${g.sh}px`;
+  const c=dp.cloneNode(true);c.removeAttribute('id');c.querySelectorAll('[id]').forEach(e=>e.removeAttribute('id'));
+  c.style.cssText=`position:absolute;left:0;top:${-i*g.sh}px;width:${g.pw}px;height:${g.ph}px;border:0;border-radius:0;box-shadow:none;overflow:hidden;margin:0;background:${dp.style.background}`;
+  w.append(c);gn.append(w);st.push([w,c])}
+ document.body.append(gn);st.forEach(x=>x[1].scrollTop=dp.scrollTop);dp.style.visibility='hidden';
+ const warp=p=>{const B=[];for(let j=0;j<=NS;j++){const y0=g.py+g.ph*j/NS,u=g.dn?j/NS:1-j/NS,q=Math.min(1,Math.max(0,p*1.7-(1-u)*.7)),e=q*q*(3-2*q);
+   B.push({y:y0+(g.ty-y0)*e,w:g.pw+(g.sw-g.pw)*e,x:g.pcx+(g.tx-g.pcx)*e})}
+  for(let i=0;i<NS;i++){const A=B[i],C=B[i+1],y=Math.min(A.y,C.y),h=Math.abs(C.y-A.y)+.6,w=(A.w+C.w)/2,x=(A.x+C.x)/2;
+   st[i][0].style.transform=`translate3d(${x-w/2}px,${y}px,0) scale(${w/g.pw},${h/g.sh})`}
+  gn.style.opacity=1-Math.min(1,Math.max(0,(p-.82)/.18))};
+ warp(from);const t0=performance.now();
+ (function f(t){const k=Math.max(0,Math.min(1,(t-t0)/ms));warp(from+(to-from)*ease(k));if(k<1)requestAnimationFrame(f);else{gn.remove();dp.style.visibility='';done()}})(t0)}
+function openDet(e){if(!WX||!WX.hours||busy)return;src=e.currentTarget;detail();const det=$('#det');det.classList.add('show');$('#dp').scrollTop=0;busy=true;
+ requestAnimationFrame(()=>det.classList.add('bk'));genie(1,0,720,eo,()=>busy=false)}
+function closeDet(){const det=$('#det');if(busy||!det.classList.contains('show'))return;busy=true;det.classList.remove('bk');
+ genie(0,1,580,eio,()=>{det.classList.remove('show');busy=false})}
 $('#wx').onclick=$('#chip').onclick=openDet;$('#det').onclick=e=>{if(e.target.id==='det'||e.target.closest('.x'))closeDet()};
 /* ---------- calendario ---------- */
 function cal(){const y=cur.getFullYear(),m=cur.getMonth(),f=(new Date(y,m,1).getDay()+6)%7,n=new Date(y,m+1,0).getDate(),td=iso(new Date());
@@ -200,22 +226,31 @@ function notif(){const a=[],t=iso(new Date());upcoming(6).forEach(x=>a.push(['�
 $('#nc').onclick=()=>{NC=(window._na||[]).map(x=>x.join('|'));W('nc',NC);notif()};
 /* ---------- Gemini ---------- */
 let H=[];const chat=$('#chat');
-function say(t,c){const d=document.createElement('div');d.className='msg '+c;d.textContent=t;chat.append(d);chat.scrollTop=1e9;return d}
+const md=t=>esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`(.+?)`/g,'<code>$1</code>').replace(/^[*-] (.+)$/gm,'• $1').replace(/\n/g,'<br>');
+function say(t,c,html){const d=document.createElement('div');d.className='msg '+c;html?d.innerHTML=t:d.textContent=t;chat.append(d);chat.scrollTop=1e9;$('#hello').style.display='none';return d}
+['Che tempo fa oggi?','Cosa ho in agenda?','Come mi vesto oggi?','Riassumi la mia giornata'].forEach(x=>{const b=document.createElement('button');b.textContent=x;b.onclick=()=>{$('#q').value=x;ask()};$('#chips').append(b)});
 async function ask(){const q=$('#q').value.trim();if(!q)return;$('#q').value='';say(q,'u');
- if(!S.key){say('Inserisci la chiave API Gemini nelle impostazioni (⚙︎ nella schermata di blocco).','m');return}
- H.push({role:'user',parts:[{text:q}]});const w=say('…','m');
- const ctx=`Sei un assistente elegante per uno smart display. Rispondi in italiano, in modo breve e naturale. Adesso: ${new Date().toLocaleString('it-IT')}.\nMeteo: ${WX?JSON.stringify(WX):'non disponibile'}.\nEventi calendario: ${JSON.stringify(E)}.`;
+ if(!S.key){say('Inserisci la chiave API di Gemini nelle impostazioni (tieni premuto sull\'orologio).','m');return}
+ H.push({role:'user',parts:[{text:q}]});const w=say('<span class="dots"><i></i><i></i><i></i></span>','m',true);
+ const wx=WX?(({hours,...r})=>JSON.stringify({...r,condizione:WC(WX.c)[1],prossime_ore:hours.slice(0,12)}))(WX):'non disponibile';
+ const ctx=`Sei l'assistente elegante di uno smart display. Rispondi sempre in italiano, in modo naturale e breve (massimo 4 frasi), usando i dati reali qui sotto quando servono e senza inventare nulla.\nData e ora: ${new Date().toLocaleString('it-IT')}.\nMeteo: ${wx}.\nEventi calendario (data → elenco): ${JSON.stringify(E)}.`;
  try{const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(S.model)}:generateContent`,{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':S.key},body:JSON.stringify({systemInstruction:{parts:[{text:ctx}]},contents:H.slice(-12)})});
-  const j=await r.json();if(!r.ok)throw new Error(j.error?.message||r.status);const t=j.candidates?.[0]?.content?.parts?.map(p=>p.text).join('')||'(nessuna risposta)';
-  H.push({role:'model',parts:[{text:t}]});w.textContent=t}catch(e){H.pop();w.textContent='Errore: '+e.message}chat.scrollTop=1e9}
+  const j=await r.json();if(!r.ok)throw new Error(j.error?.message||r.status);
+  const t=j.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('')||'(nessuna risposta)';H.push({role:'model',parts:[{text:t}]});w.innerHTML=md(t)}
+ catch(e){H.pop();const m=String(e.message);w.textContent=/api key|permission|401|403/i.test(m)?'Chiave API non valida o non autorizzata: controllala nelle impostazioni.':'Errore: '+m}
+ chat.scrollTop=1e9}
 $('#send').onclick=ask;$('#q').onkeydown=e=>{if(e.key==='Enter')ask()};
+$('#nw').onclick=()=>{H=[];chat.querySelectorAll('.msg').forEach(m=>m.remove());$('#hello').style.display='flex'};
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+$('#mic').onclick=()=>{if(!SR){say('Il riconoscimento vocale non è supportato su questo browser.','m');return}const r=new SR();r.lang='it-IT';
+ r.onstart=()=>$('#mic').classList.add('rec');r.onend=()=>$('#mic').classList.remove('rec');r.onresult=e=>{$('#q').value=e.results[0][0].transcript;ask()};try{r.start()}catch{}};
 /* ---------- impostazioni ---------- */
 ['#EAB4FF'].length;['#8ab4ff','#ff9f7a','#7ee0b0','#f4d35e','#d49cff'].forEach(c=>{const b=document.createElement('button');b.style.background=c;b.onclick=()=>{S.acc=c;theme()};$('#sw').append(b)});
 function openSet(){$('#sk').value=S.key;$('#sm').value=S.model;$('#sc').value=S.city;$('#sb').value=S.bg;$('#set').classList.add('show')}
 $('#set').onclick=e=>{if(e.target.id==='set')$('#set').classList.remove('show')};
 $('#sb').onchange=()=>{if($('#sb').value==='custom')$('#sf').click()};
 $('#sf').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas'),k=Math.min(1,1920/im.width);c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);W('bgimg',c.toDataURL('image/jpeg',.82));theme()};im.src=r.result};r.readAsDataURL(f)};
-$('#ss').onclick=()=>{const c=S.city;S.key=$('#sk').value.trim();S.model=$('#sm').value.trim()||'gemini-2.5-flash';S.city=$('#sc').value.trim();S.bg=$('#sb').value;W('S',S);theme();$('#set').classList.remove('show');if(c!==S.city)weather()};
+$('#ss').onclick=()=>{const c=S.city;S.key=$('#sk').value.trim();S.model=$('#sm').value.trim()||'gemini-flash-latest';S.city=$('#sc').value.trim();S.bg=$('#sb').value;W('S',S);theme();$('#set').classList.remove('show');if(c!==S.city)weather()};
 /* ---------- avvio / schermo sempre acceso / PWA ---------- */
 let wl;async function lock(){try{wl=await navigator.wakeLock.request('screen')}catch{}}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)lock()});
