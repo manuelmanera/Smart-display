@@ -96,9 +96,9 @@ label{font-size:1.8vh;opacity:.8}
 <section class="page" id="p2"><div class="pad"><div class="glass" style="flex:1"><div style="display:flex;justify-content:space-between"><h2>Notifiche</h2><button class="btn" id="nc">Pulisci</button></div><div id="nl"></div></div></div></section>
 
 <section class="page" id="p3"><div class="pad"><div class="glass" id="ga">
-<div id="gh"><span><span class="gg">✦</span> <span class="gg">Gemini</span></span><button id="nw">Nuova chat</button></div>
+<div id="gh"><span><span class="gg">✦</span> <span class="gg">Assistente AI</span></span><button id="nw">Nuova chat</button></div>
 <div id="chat"><div id="hello"><div class="gt gg">Ciao, come posso aiutarti?</div><div id="chips"></div></div></div>
-<div id="gi"><input id="q" placeholder="Chiedi qualcosa a Gemini" autocomplete="off"><button id="mic">🎙️</button><button id="send">↑</button></div></div></div></section>
+<div id="gi"><input id="q" placeholder="Chiedi qualcosa all'AI..." autocomplete="off"><button id="mic">🎙️</button><button id="send">↑</button></div></div></div></section>
 
 <nav id="dock"><i></i></nav>
 
@@ -116,11 +116,24 @@ label{font-size:1.8vh;opacity:.8}
 <script>
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const L=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},W=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){alert('Memoria piena')}};
-const S=Object.assign({key:'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',model:'llama-3.3-70b-versatile',city:'',bg:'auto',acc:'#8ab4ff'},L('S',{}));
-if(!S.key) S.key = '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';
-if(!S.model || S.model.includes('gemini')) S.model='llama-3.3-70b-versatile';
+
+/* Rimosso completamente il vecchio riferimento al salvataggio 'S' di Gemini */
+localStorage.removeItem('S');
+
+const S=Object.assign({
+ key:'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',
+ model:'llama-3.3-70b-versatile',
+ city:'',
+ bg:'auto',
+ acc:'#8ab4ff'
+}, L('S_GROQ', {}));
+
+if(!S.key || S.key.startsWith('AIza')) S.key = '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';
+if(!S.model || S.model.includes('gemini')) S.model = 'llama-3.3-70b-versatile';
+
 const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 let E=L('ev',{}),cur=new Date(),sel=iso(new Date()),WX=L('wx',null),NC=L('nc',[]);
+
 /* ---------- tema ---------- */
 function theme(){const h=new Date().getHours(),n=S.bg==='night'||(S.bg==='auto'&&(h<6||h>=19));
  document.documentElement.dataset.th=n?'night':'day';document.documentElement.style.setProperty('--a',S.acc);
@@ -222,7 +235,7 @@ function notif(){const a=[],t=iso(new Date());upcoming(6).forEach(x=>a.push(['�
  const box=$('#nl');box.innerHTML='';a.filter(x=>!NC.includes(x.join('|'))).forEach(x=>{const d=document.createElement('div');d.className='item';const s=document.createElement('div');s.textContent=x[0]+' '+x[1];const m=document.createElement('small');m.textContent=x[2];s.append(m);d.append(s);box.append(d)});
  if(!box.children.length)box.innerHTML='<div class="item" style="opacity:.6">Nessuna notifica</div>';window._na=a}
 $('#nc').onclick=()=>{NC=(window._na||[]).map(x=>x.join('|'));W('nc',NC);notif()};
-/* ---------- Groq (Sostituto Gemini) ---------- */
+/* ---------- Chat Groq AI ---------- */
 let H=[];const chat=$('#chat');
 const md=t=>esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`(.+?)`/g,'<code>$1</code>').replace(/^[*-] (.+)$/gm,'• $1').replace(/\n/g,'<br>');
 function say(t,c,html){const d=document.createElement('div');d.className='msg '+c;html?d.innerHTML=t:d.textContent=t;chat.append(d);chat.scrollTop=1e9;$('#hello').style.display='none';return d}
@@ -265,7 +278,7 @@ $('#st').onclick=async()=>{const k=$('#sk').value.trim(),m=$('#sm').value.trim()
  }catch(e){$('#sr').textContent='❌ '+e.message}};
 $('#sb').onchange=()=>{if($('#sb').value==='custom')$('#sf').click()};
 $('#sf').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas'),k=Math.min(1,1920/im.width);c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);W('bgimg',c.toDataURL('image/jpeg',.82));theme()};im.src=r.result};r.readAsDataURL(f)};
-$('#ss').onclick=()=>{const c=S.city;S.key=$('#sk').value.trim();S.model=$('#sm').value.trim()\vert{}\vert{}'llama-3.3-70b-versatile';S.city=$('#sc').value.trim();S.bg=$('#sb').value;W('S',S);theme();$('#set').classList.remove('show');if(c!==S.city)weather()};
+$('#ss').onclick=()=>{const c=S.city;S.key=$('#sk').value.trim();S.model=$('#sm').value.trim()\vert{}\vert{}'llama-3.3-70b-versatile';S.city=$('#sc').value.trim();S.bg=$('#sb').value;W('S_GROQ',S);theme();$('#set').classList.remove('show');if(c!==S.city)weather()};
 /* ---------- avvio / schermo sempre acceso / PWA ---------- */
 let wl;async function lock(){try{wl=await navigator.wakeLock.request('screen')}catch{}}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)lock()});
