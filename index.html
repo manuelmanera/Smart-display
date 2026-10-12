@@ -110,7 +110,7 @@ label{font-size:1.8vh;opacity:.8}
 <label>Sfondo</label><select id="sb"><option value="auto">Automatico (giorno/notte)</option><option value="day">Deserto giorno</option><option value="night">Deserto notte</option><option value="custom">Immagine personale…</option></select>
 <input type="file" id="sf" accept="image/*" style="display:none">
 <label>Colore d'accento</label><div class="sw" id="sw"></div>
-<button class="btn" id="ss">Salva e chiudi</button></div></div>
+<button class="btn" id="st" style="background:rgba(255,255,255,.22);color:#fff">Testa la chiave</button><div id="sr" style="font-size:1.9vh;min-height:2.4vh"></div><button class="btn" id="ss">Salva e chiudi</button></div></div>
 <div id="det"><div id="dp"><button class="x">✕</button><div id="detc"></div></div></div>
 
 <script>
@@ -232,12 +232,12 @@ function say(t,c,html){const d=document.createElement('div');d.className='msg '+
 async function ask(){const q=$('#q').value.trim();if(!q)return;$('#q').value='';say(q,'u');
  if(!S.key){say('Inserisci la chiave API di Gemini nelle impostazioni (tieni premuto sull\'orologio).','m');return}
  H.push({role:'user',parts:[{text:q}]});const w=say('<span class="dots"><i></i><i></i><i></i></span>','m',true);
- const wx=WX?(({hours,...r})=>JSON.stringify({...r,condizione:WC(WX.c)[1],prossime_ore:hours.slice(0,12)}))(WX):'non disponibile';
+ const wx=WX?(({hours,...r})=>JSON.stringify({...r,condizione:WC(WX.c)[1],prossime_ore:(hours||[]).slice(0,12)}))(WX):'non disponibile';
  const ctx=`Sei l'assistente elegante di uno smart display. Rispondi sempre in italiano, in modo naturale e breve (massimo 4 frasi), usando i dati reali qui sotto quando servono e senza inventare nulla.\nData e ora: ${new Date().toLocaleString('it-IT')}.\nMeteo: ${wx}.\nEventi calendario (data → elenco): ${JSON.stringify(E)}.`;
  try{const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(S.model)}:generateContent`,{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':S.key},body:JSON.stringify({systemInstruction:{parts:[{text:ctx}]},contents:H.slice(-12)})});
   const j=await r.json();if(!r.ok)throw new Error(j.error?.message||r.status);
   const t=j.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('')||'(nessuna risposta)';H.push({role:'model',parts:[{text:t}]});w.innerHTML=md(t)}
- catch(e){H.pop();const m=String(e.message);w.textContent=/api key|permission|401|403/i.test(m)?'Chiave API non valida o non autorizzata: controllala nelle impostazioni.':'Errore: '+m}
+ catch(e){H.pop();const m=String(e.message);w.textContent='Errore Gemini: '+m+(/failed to fetch/i.test(m)?' (controlla la connessione)':/api key|permission|401|403/i.test(m)?' — controlla la chiave nelle impostazioni':'')}
  chat.scrollTop=1e9}
 $('#send').onclick=ask;$('#q').onkeydown=e=>{if(e.key==='Enter')ask()};
 $('#nw').onclick=()=>{H=[];chat.querySelectorAll('.msg').forEach(m=>m.remove());$('#hello').style.display='flex'};
@@ -248,6 +248,9 @@ $('#mic').onclick=()=>{if(!SR){say('Il riconoscimento vocale non è supportato s
 ['#EAB4FF'].length;['#8ab4ff','#ff9f7a','#7ee0b0','#f4d35e','#d49cff'].forEach(c=>{const b=document.createElement('button');b.style.background=c;b.onclick=()=>{S.acc=c;theme()};$('#sw').append(b)});
 function openSet(){$('#sk').value=S.key;$('#sm').value=S.model;$('#sc').value=S.city;$('#sb').value=S.bg;$('#set').classList.add('show')}
 $('#set').onclick=e=>{if(e.target.id==='set')$('#set').classList.remove('show')};
+$('#st').onclick=async()=>{const k=$('#sk').value.trim(),m=$('#sm').value.trim()||'gemini-flash-latest';$('#sr').textContent='Test in corso…';
+ try{const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(m)}:generateContent`,{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':k},body:JSON.stringify({contents:[{parts:[{text:'Rispondi solo: ok'}]}]})});
+  const j=await r.json();$('#sr').textContent=r.ok?'✅ Funziona: '+(j.candidates?.[0]?.content?.parts?.[0]?.text||'ok'):'❌ '+(j.error?.message||r.status)}catch(e){$('#sr').textContent='❌ '+e.message}};
 $('#sb').onchange=()=>{if($('#sb').value==='custom')$('#sf').click()};
 $('#sf').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas'),k=Math.min(1,1920/im.width);c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);W('bgimg',c.toDataURL('image/jpeg',.82));theme()};im.src=r.result};r.readAsDataURL(f)};
 $('#ss').onclick=()=>{const c=S.city;S.key=$('#sk').value.trim();S.model=$('#sm').value.trim()||'gemini-flash-latest';S.city=$('#sc').value.trim();S.bg=$('#sb').value;W('S',S);theme();$('#set').classList.remove('show');if(c!==S.city)weather()};
