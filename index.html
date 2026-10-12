@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="it"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#000"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon.svg">
+<title>Smart Display</title>
+<style>
+:root{--a:#8ab4ff;--g:rgba(255,255,255,.16);--gb:rgba(255,255,255,.28);--t:#fff;--s1:#a9c4e4;--s2:#f1d9bd;--m1:#6f6455;--m2:#a39583;--d1:#d9c6a8;--d2:#c2ac8c}
+[data-th=night]{--s1:#1a2650;--s2:#b58aa6;--m1:#2f2a3d;--m2:#4c4160;--d1:#5b4a66;--d2:#3d3049}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent;user-select:none}
+html,body{height:100%;overflow:hidden;background:#000;color:var(--t);font-family:"SF Pro Display",Roboto,system-ui,sans-serif;touch-action:none}
+#bg{position:fixed;inset:0;background:linear-gradient(var(--s1),var(--s2) 62%);background-size:cover;background-position:center;transition:background 1s}
+svg.sc{position:absolute;inset:0;width:100%;height:100%}
+.m1{fill:var(--m1)}.m2{fill:var(--m2)}.d1{fill:var(--d1)}.d2{fill:var(--d2)}
+.custom svg.sc{display:none}
+.page{position:fixed;inset:0;will-change:transform,opacity,filter}
+.glass{background:var(--g);backdrop-filter:blur(25px) saturate(160%);-webkit-backdrop-filter:blur(25px) saturate(160%);border:1px solid var(--gb);border-radius:28px;box-shadow:0 8px 32px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.3)}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+/* lock */
+#date{position:absolute;top:6.5vh;width:100%;text-align:center;font-size:2.4vh;font-weight:600;text-transform:capitalize;text-shadow:0 1px 8px rgba(0,0,0,.2)}
+#clock{position:absolute;top:11vh;width:100%;text-align:center;white-space:nowrap;font-size:min(30vh,22vw);line-height:1;font-weight:500;font-stretch:condensed;font-family:"Roboto Condensed","Arial Narrow","SF Pro Display",sans-serif;letter-spacing:-.01em;background:linear-gradient(#fff 20%,rgba(255,255,255,.55));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 6px 24px rgba(0,0,0,.15))}
+#ridge{z-index:2;pointer-events:none}
+.side{position:absolute;right:3vw;bottom:9vh;display:flex;flex-direction:column;gap:2vh;z-index:3}
+.rb{width:7vh;height:7vh;border-radius:50%;font-size:3vh;display:grid;place-items:center;background:var(--g);backdrop-filter:blur(25px);-webkit-backdrop-filter:blur(25px);border:1px solid var(--gb)}
+.rb.on{background:#fff;color:#222}
+#chip{position:absolute;top:4vh;right:3vw;z-index:3;padding:1vh 2vh;font-size:2vh;border-radius:99px}
+#gear{position:absolute;top:4vh;left:3vw;z-index:3}
+#wx{position:absolute;left:4vw;bottom:9vh;z-index:3;padding:2.4vh 3vh;min-width:24vw}
+#wx b{font-size:5vh;font-weight:500}#wx small{display:block;opacity:.85;font-size:1.9vh;margin-top:.4vh}
+/* dock */
+#dock{position:fixed;left:0;right:0;bottom:0;height:10vh;z-index:20;touch-action:none;display:flex;align-items:flex-end;justify-content:center;padding-bottom:1.6vh}
+#dock i{width:18vh;height:.6vh;border-radius:9px;background:#fff;opacity:.9;box-shadow:0 1px 6px rgba(0,0,0,.25)}
+/* pages */
+.pad{position:absolute;inset:5vh 4vw 8vh;display:flex;gap:2.5vw}
+.pad>.glass{padding:3vh;overflow:auto;touch-action:pan-y}
+h2{font-size:3.2vh;margin-bottom:2vh;font-weight:600;text-transform:capitalize}
+#grid{display:grid;grid-template-columns:repeat(7,1fr);gap:.8vh;text-align:center}
+#grid b{opacity:.6;font-size:1.8vh}
+#grid button{aspect-ratio:1.25;border-radius:14px;font-size:2.3vh;position:relative}
+#grid .today{border:1px solid var(--a)}#grid .sel{background:var(--a);color:#111;font-weight:700}
+#grid .has::after{content:"";position:absolute;bottom:.7vh;left:50%;width:.8vh;height:.8vh;margin-left:-.4vh;border-radius:50%;background:currentColor}
+.nav{display:flex;gap:1vh}.nav button{width:5vh;height:5vh;border-radius:50%;background:var(--g);font-size:2.4vh}
+.item{display:flex;justify-content:space-between;align-items:center;padding:1.4vh 2vh;margin-bottom:1vh;border-radius:18px;background:rgba(255,255,255,.14);font-size:2.2vh}
+.item small{opacity:.7;display:block;font-size:1.7vh}
+input,select{font:inherit;font-size:2.1vh;color:#fff;background:rgba(255,255,255,.14);border:1px solid var(--gb);border-radius:14px;padding:1.2vh 1.6vh;outline:0;width:100%}
+select option{color:#000}::placeholder{color:rgba(255,255,255,.6)}
+.btn{background:var(--a);color:#111;font-weight:600;border-radius:14px;padding:1.2vh 2.4vh;font-size:2.1vh}
+#chat{flex:1;overflow:auto;display:flex;flex-direction:column;gap:1vh;touch-action:pan-y}
+.msg{max-width:78%;padding:1.2vh 2vh;border-radius:20px;font-size:2.2vh;white-space:pre-wrap;user-select:text}
+.msg.u{align-self:flex-end;background:var(--a);color:#111}.msg.m{align-self:flex-start;background:rgba(255,255,255,.2)}
+/* settings & overlays */
+#set{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.4);display:none;place-items:center}
+#set.show{display:grid}#set .glass{width:min(620px,90vw);max-height:88vh;overflow:auto;padding:3vh;display:grid;gap:1.4vh;background:rgba(40,40,50,.55);touch-action:pan-y}
+label{font-size:1.8vh;opacity:.8}
+.sw{display:flex;gap:1.4vh}.sw button{width:5vh;height:5vh;border-radius:50%;border:2px solid #fff6}
+#sleep{position:fixed;inset:0;z-index:60;background:#000;opacity:0;pointer-events:none;transition:opacity .8s;display:grid;place-items:center;font-size:12vh;font-family:"Roboto Condensed",sans-serif;color:#333}
+#sleep.on{opacity:.94;pointer-events:auto}
+#white{position:fixed;inset:0;z-index:55;background:#fff;display:none}
+</style></head>
+<body>
+<div id="bg">
+<svg class="sc" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMax slice"><g id="rg" transform="translate(0,120)"><path class="m2" d="M0 520L120 450 220 500 360 400 520 490 700 380 900 480 1100 370 1300 470 1450 420 1600 480V1000H0Z"/><path class="m1" d="M0 620L180 530 330 600 520 480 760 600 980 510 1200 610 1400 540 1600 610V1000H0Z"/></g><path class="d1" transform="translate(0,60)" d="M0 760Q400 680 800 740T1600 720V1000H0Z"/><path class="d2" transform="translate(0,60)" d="M0 880Q500 800 1000 860T1600 830V1000H0Z"/></svg></div>
+
+<section class="page" id="p0">
+<button id="gear" class="rb">⚙︎</button>
+<div id="date"></div><div id="clock"></div>
+<div id="chip" class="glass">📶 <span id="chipT">--°</span></div>
+<svg id="ridge" class="sc" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMax slice"><use href="#rg"/></svg>
+<div id="wx" class="glass"><b id="wT">--°</b><small id="wD">Caricamento meteo…</small><small id="wN"></small></div>
+<div class="side"><button class="rb" id="bMoon">🌙</button><button class="rb" id="bTorch">🔦</button><button class="rb" id="bCam">📷</button></div>
+<input type="file" id="camIn" accept="image/*" capture="environment" hidden>
+</section>
+
+<section class="page" id="p1"><div class="pad">
+<div class="glass" style="flex:1.3"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.6vh"><h2 id="mt" style="margin:0"></h2><div class="nav"><button id="pv">‹</button><button id="nx">›</button></div></div><div id="grid"></div></div>
+<div class="glass" style="flex:1;display:flex;flex-direction:column"><h2 id="dt"></h2><div id="evs" style="flex:1;overflow:auto"></div>
+<div style="display:grid;grid-template-columns:1fr 14vh;gap:1vh;margin-top:1vh"><input id="et" placeholder="Nuovo evento"><input id="eh" type="time"></div><button class="btn" id="ea" style="margin-top:1vh">Aggiungi</button></div></div></section>
+
+<section class="page" id="p2"><div class="pad"><div class="glass" style="flex:1"><div style="display:flex;justify-content:space-between"><h2>Notifiche</h2><button class="btn" id="nc">Pulisci</button></div><div id="nl"></div></div></div></section>
+
+<section class="page" id="p3"><div class="pad"><div class="glass" style="flex:1;display:flex;flex-direction:column;padding:2.4vh"><h2>Assistente Gemini</h2><div id="chat"></div>
+<div style="display:grid;grid-template-columns:1fr auto;gap:1vh;margin-top:1.4vh"><input id="q" placeholder="Chiedi di agenda, meteo, programmi…" autocomplete="off"><button class="btn" id="send">Invia</button></div></div></div></section>
+
+<nav id="dock"><i></i></nav>
+
+<div id="set"><div class="glass">
+<h2>Impostazioni</h2>
+<label>Chiave API Gemini (resta solo su questo dispositivo)</label><input id="sk" type="password" placeholder="AIza…">
+<label>Modello Gemini</label><input id="sm" placeholder="gemini-2.5-flash">
+<label>Città per il meteo</label><input id="sc" placeholder="Roma">
+<label>Sfondo</label><select id="sb"><option value="auto">Automatico (giorno/notte)</option><option value="day">Deserto giorno</option><option value="night">Deserto notte</option><option value="custom">Immagine personale…</option></select>
+<input type="file" id="sf" accept="image/*" style="display:none">
+<label>Colore d'accento</label><div class="sw" id="sw"></div>
+<button class="btn" id="ss">Salva e chiudi</button></div></div>
+<div id="sleep"></div><div id="white"></div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const L=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},W=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){alert('Memoria piena')}};
+const S=Object.assign({key:'',model:'gemini-2.5-flash',city:'Roma',bg:'auto',acc:'#8ab4ff'},L('S',{}));
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+let E=L('ev',{}),cur=new Date(),sel=iso(new Date()),WX=L('wx',null),NC=L('nc',[]);
+/* ---------- tema ---------- */
+function theme(){const h=new Date().getHours(),n=S.bg==='night'||(S.bg==='auto'&&(h<6||h>=19));
+ document.documentElement.dataset.th=n?'night':'day';document.documentElement.style.setProperty('--a',S.acc);
+ const img=L('bgimg',null),c=S.bg==='custom'&&img;document.body.classList.toggle('custom',!!c);
+ $('#bg').style.backgroundImage=c?`url(${img})`:'';}
+/* ---------- orologio ---------- */
+function tick(){const d=new Date();$('#clock').textContent=d.toLocaleTimeString('it-IT',{hour:'numeric',minute:'2-digit'});
+ $('#date').textContent=d.toLocaleDateString('it-IT',{weekday:'short',day:'numeric',month:'short'});$('#sleep').textContent=$('#clock').textContent}
+setInterval(()=>{tick();if(!(new Date().getSeconds()))theme()},1000);
+/* ---------- pager con molla ---------- */
+const P=$$('.page');let pos=0,vel=0,tg=0,raf,last,drag;
+function render(){P.forEach((p,i)=>{const d=i-pos,a=Math.min(Math.abs(d),1);
+ p.style.transform=`translateX(${d*100}%) scale(${1-.1*a})`;p.style.opacity=1-.7*a;p.style.filter=`blur(${a*10}px)`;p.style.pointerEvents=a<.5?'auto':'none';p.style.visibility=a>=1?'hidden':'visible'});
+ $$('#dock button').forEach(b=>b.classList.toggle('act',+b.dataset.i===Math.round(pos)))}
+function step(t){const dt=Math.min((t-last)/1000,.032);last=t;vel+=(-170*(pos-tg)-22*vel)*dt;pos+=vel*dt;render();
+ if(Math.abs(pos-tg)>.0004||Math.abs(vel)>.002)raf=requestAnimationFrame(step);else{pos=tg;vel=0;render()}}
+function go(i){tg=Math.max(0,Math.min(3,i));cancelAnimationFrame(raf);last=performance.now();raf=requestAnimationFrame(step);if(tg===2)notif()}
+const dk=$('#dock');
+dk.addEventListener('pointerdown',e=>{dk.setPointerCapture(e.pointerId);cancelAnimationFrame(raf);drag={x:e.clientX,p:pos,lx:e.clientX,lt:performance.now(),v:0,m:false}});
+dk.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x;if(Math.abs(dx)>8)drag.m=true;if(!drag.m)return;
+ let p=drag.p-dx/innerWidth*1.6;if(p<0)p*=.35;if(p>3)p=3+(p-3)*.35;pos=p;const n=performance.now();drag.v=-(e.clientX-drag.lx)/innerWidth*1.6/((n-drag.lt)/1000||1);drag.lx=e.clientX;drag.lt=n;render()});
+dk.addEventListener('pointerup',e=>{if(!drag)return;const d=drag;drag=null;
+ if(d.m){vel=d.v;go(Math.round(pos+Math.max(-1.2,Math.min(1.2,d.v*.25))))}
+ else{const b=e.target.closest('button');b?go(+b.dataset.i):go(0)}});
+/* ---------- meteo ---------- */
+const WC=c=>c==0?['☀️','Sereno']:c<3?['⛅','Poco nuvoloso']:c==3?['☁️','Coperto']:c<50?['🌫️','Nebbia']:c<70?['🌧️','Pioggia']:c<80?['❄️','Neve']:c<95?['🌦️','Rovesci']:['⛈️','Temporale'];
+async function weather(){try{const g=await(await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(S.city)}&count=1&language=it`)).json();const r=g.results[0];
+ const w=await(await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${r.latitude}&longitude=${r.longitude}&current=temperature_2m,apparent_temperature,weather_code&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&forecast_days=3`)).json();
+ WX={city:r.name,t:Math.round(w.current.temperature_2m),f:Math.round(w.current.apparent_temperature),c:w.current.weather_code,max:Math.round(w.daily.temperature_2m_max[0]),min:Math.round(w.daily.temperature_2m_min[0]),rain:w.daily.precipitation_probability_max[0],rain1:w.daily.precipitation_probability_max[1],at:Date.now()};W('wx',WX)}catch(e){}
+ showWx()}
+function showWx(){if(!WX)return;const[i,t]=WC(WX.c);$('#wT').textContent=`${i} ${WX.t}°`;$('#chipT').textContent=WX.t+'°';
+ $('#wD').textContent=`${WX.city} · ${t} · percepita ${WX.f}°`;$('#wN').textContent=`Max ${WX.max}° / Min ${WX.min}° · Pioggia ${WX.rain}%`}
+/* ---------- calendario ---------- */
+function cal(){const y=cur.getFullYear(),m=cur.getMonth(),f=(new Date(y,m,1).getDay()+6)%7,n=new Date(y,m+1,0).getDate(),td=iso(new Date());
+ $('#mt').textContent=cur.toLocaleDateString('it-IT',{month:'long',year:'numeric'});let h=['L','M','M','G','V','S','D'].map(x=>`<b>${x}</b>`).join('')+'<i></i>'.repeat(f);
+ for(let d=1;d<=n;d++){const k=iso(new Date(y,m,d));h+=`<button data-d="${k}" class="${k==sel?'sel':''} ${k==td?'today':''} ${E[k]?.length?'has':''}">${d}</button>`}
+ $('#grid').innerHTML=h;const ev=(E[sel]||[]).sort((a,b)=>(a.h||'').localeCompare(b.h||''));
+ $('#dt').textContent=new Date(sel+'T12:00').toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'});
+ const box=$('#evs');box.innerHTML='';if(!ev.length)box.innerHTML='<div class="item" style="opacity:.6">Nessun evento</div>';
+ ev.forEach((x,i)=>{const d=document.createElement('div');d.className='item';const s=document.createElement('div');s.textContent=x.t;if(x.h){const m=document.createElement('small');m.textContent=x.h;s.append(m)}
+  const b=document.createElement('button');b.textContent='✕';b.onclick=()=>{E[sel].splice(i,1);W('ev',E);cal();lockNext()};d.append(s,b);box.append(d)});}
+$('#grid').onclick=e=>{const b=e.target.closest('[data-d]');if(b){sel=b.dataset.d;cal()}};
+$('#pv').onclick=()=>{cur.setMonth(cur.getMonth()-1);cal()};$('#nx').onclick=()=>{cur.setMonth(cur.getMonth()+1);cal()};
+$('#ea').onclick=()=>{const t=$('#et').value.trim();if(!t)return;(E[sel]=E[sel]||[]).push({t,h:$('#eh').value});W('ev',E);$('#et').value='';cal();lockNext()};
+function upcoming(n=5){const now=new Date(),out=[];Object.keys(E).sort().forEach(k=>E[k].forEach(x=>{const d=new Date(k+'T'+(x.h||'23:59'));if(d>=now||k===iso(now))out.push({k,...x})}));return out.slice(0,n)}
+function lockNext(){const u=upcoming(1)[0];$('#wN').textContent=(WX?`Max ${WX.max}° / Min ${WX.min}° · Pioggia ${WX.rain}%`:'')+(u?`\n📅 ${u.h||''} ${u.t}`:'');$('#wN').style.whiteSpace='pre-line'}
+/* ---------- notifiche ---------- */
+function notif(){const a=[],t=iso(new Date());upcoming(6).forEach(x=>a.push(['📅',x.t,(x.k==t?'Oggi':x.k)+(x.h?' alle '+x.h:'')]));
+ if(WX){if(WX.rain>=50)a.push(['🌧️','Possibile pioggia oggi',WX.rain+'% di probabilità']);if(WX.max>=33)a.push(['🔥','Caldo intenso',`Massima ${WX.max}°`]);if(WX.min<=2)a.push(['🥶','Rischio gelo',`Minima ${WX.min}°`])}
+ const box=$('#nl');box.innerHTML='';a.filter(x=>!NC.includes(x.join('|'))).forEach(x=>{const d=document.createElement('div');d.className='item';const s=document.createElement('div');s.textContent=x[0]+' '+x[1];const m=document.createElement('small');m.textContent=x[2];s.append(m);d.append(s);box.append(d)});
+ if(!box.children.length)box.innerHTML='<div class="item" style="opacity:.6">Nessuna notifica</div>';window._na=a}
+$('#nc').onclick=()=>{NC=(window._na||[]).map(x=>x.join('|'));W('nc',NC);notif()};
+/* ---------- Gemini ---------- */
+let H=[];const chat=$('#chat');
+function say(t,c){const d=document.createElement('div');d.className='msg '+c;d.textContent=t;chat.append(d);chat.scrollTop=1e9;return d}
+async function ask(){const q=$('#q').value.trim();if(!q)return;$('#q').value='';say(q,'u');
+ if(!S.key){say('Inserisci la chiave API Gemini nelle impostazioni (⚙︎ nella schermata di blocco).','m');return}
+ H.push({role:'user',parts:[{text:q}]});const w=say('…','m');
+ const ctx=`Sei un assistente elegante per uno smart display. Rispondi in italiano, in modo breve e naturale. Adesso: ${new Date().toLocaleString('it-IT')}.\nMeteo: ${WX?JSON.stringify(WX):'non disponibile'}.\nEventi calendario: ${JSON.stringify(E)}.`;
+ try{const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(S.model)}:generateContent`,{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':S.key},body:JSON.stringify({systemInstruction:{parts:[{text:ctx}]},contents:H.slice(-12)})});
+  const j=await r.json();if(!r.ok)throw new Error(j.error?.message||r.status);const t=j.candidates?.[0]?.content?.parts?.map(p=>p.text).join('')||'(nessuna risposta)';
+  H.push({role:'model',parts:[{text:t}]});w.textContent=t}catch(e){H.pop();w.textContent='Errore: '+e.message}chat.scrollTop=1e9}
+$('#send').onclick=ask;$('#q').onkeydown=e=>{if(e.key==='Enter')ask()};
+/* ---------- lock: pulsanti ---------- */
+let tOn=false,ts;
+$('#bTorch').onclick=async()=>{tOn=!tOn;$('#bTorch').classList.toggle('on',tOn);
+ try{if(tOn){ts=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});await ts.getVideoTracks()[0].applyConstraints({advanced:[{torch:true}]})}else ts?.getTracks().forEach(t=>t.stop());$('#white').style.display='none'}
+ catch(e){ts?.getTracks().forEach(t=>t.stop());$('#white').style.display=tOn?'block':'none'}};
+$('#white').onclick=()=>$('#bTorch').click();
+$('#bCam').onclick=()=>$('#camIn').click();
+$('#bMoon').onclick=()=>$('#sleep').classList.add('on');$('#sleep').onclick=()=>$('#sleep').classList.remove('on');
+/* ---------- impostazioni ---------- */
+['#EAB4FF'].length;['#8ab4ff','#ff9f7a','#7ee0b0','#f4d35e','#d49cff'].forEach(c=>{const b=document.createElement('button');b.style.background=c;b.onclick=()=>{S.acc=c;theme()};$('#sw').append(b)});
+$('#gear').onclick=()=>{$('#sk').value=S.key;$('#sm').value=S.model;$('#sc').value=S.city;$('#sb').value=S.bg;$('#set').classList.add('show')};
+$('#sb').onchange=()=>{if($('#sb').value==='custom')$('#sf').click()};
+$('#sf').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas'),k=Math.min(1,1920/im.width);c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);W('bgimg',c.toDataURL('image/jpeg',.82));theme()};im.src=r.result};r.readAsDataURL(f)};
+$('#ss').onclick=()=>{const c=S.city;S.key=$('#sk').value.trim();S.model=$('#sm').value.trim()||'gemini-2.5-flash';S.city=$('#sc').value.trim()||'Roma';S.bg=$('#sb').value;W('S',S);theme();$('#set').classList.remove('show');if(c!==S.city)weather()};
+/* ---------- avvio / schermo sempre acceso / PWA ---------- */
+let wl;async function lock(){try{wl=await navigator.wakeLock.request('screen')}catch{}}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)lock()});
+document.addEventListener('click',()=>{lock();if(!document.fullscreenElement&&matchMedia('(display-mode: browser)').matches)document.documentElement.requestFullscreen?.().catch(()=>{})},{once:true});
+if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js'));
+theme();tick();cal();showWx();lockNext();render();weather();setInterval(weather,30*60e3);
+</script></body></html>
