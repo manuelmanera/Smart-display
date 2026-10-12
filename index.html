@@ -104,8 +104,8 @@ label{font-size:1.8vh;opacity:.8}
 
 <div id="set"><div class="glass">
 <h2>Impostazioni</h2>
-<label>Chiave API Gemini (resta solo su questo dispositivo)</label><input id="sk" type="password" placeholder="AIza…">
-<label>Modello Gemini</label><input id="sm" placeholder="gemini-flash-latest">
+<label>Chiave API Groq (resta solo su questo dispositivo)</label><input id="sk" type="password" placeholder="gsk_…">
+<label>Modello Groq</label><input id="sm" placeholder="llama-3.3-70b-versatile">
 <label>Posizione meteo (vuoto = automatica via GPS)</label><input id="sc" placeholder="Automatica · oppure scrivi una città">
 <label>Sfondo</label><select id="sb"><option value="auto">Automatico (giorno/notte)</option><option value="day">Deserto giorno</option><option value="night">Deserto notte</option><option value="custom">Immagine personale…</option></select>
 <input type="file" id="sf" accept="image/*" style="display:none">
@@ -116,7 +116,9 @@ label{font-size:1.8vh;opacity:.8}
 <script>
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const L=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},W=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){alert('Memoria piena')}};
-const S=Object.assign({key:'',model:'gemini-flash-latest',city:'',bg:'auto',acc:'#8ab4ff'},L('S',{}));if(S.model==='gemini-2.5-flash')S.model='gemini-flash-latest';
+const S=Object.assign({key:'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',model:'llama-3.3-70b-versatile',city:'',bg:'auto',acc:'#8ab4ff'},L('S',{}));
+if(!S.key) S.key = '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';
+if(!S.model || S.model.includes('gemini')) S.model='llama-3.3-70b-versatile';
 const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 let E=L('ev',{}),cur=new Date(),sel=iso(new Date()),WX=L('wx',null),NC=L('nc',[]);
 /* ---------- tema ---------- */
@@ -126,10 +128,7 @@ function theme(){const h=new Date().getHours(),n=S.bg==='night'||(S.bg==='auto'&
  $('#bg').style.backgroundImage=c?`url(${img})`:'';}
 /* ---------- orologio ---------- */
 function tick(){const d=new Date();$('#clock').textContent=d.toLocaleTimeString('it-IT',{hour:'numeric',minute:'2-digit'});
- $('#date').textContent=d.toLocaleDateString('it-IT',{weekday:'short',day:'numeric',month:'short'})}
-setInterval(()=>{tick();if(!(new Date().getSeconds()))theme()},1000);
-/* ---------- pager circolare con molla, swipe ovunque ---------- */
-const P=$$('.page'),N=P.length,SL=[0,3,2,1],wrap=d=>((d+N/2)%N+N)%N-N/2,mod=x=>((x%N)+N)%N;
+ $('#date').textContent=d.toLocaleDateString('it-IT',{weekday:'short',day:'numeric',month:'short'})} setInterval(()=>{tick();if(!(new Date().getSeconds()))theme()},1000); /* ---------- pager circolare con molla, swipe ovunque ---------- */ const P=$$('.page'),N=P.length,SL=[0,3,2,1],wrap=d=>((d+N/2)%N+N)%N-N/2,mod=x=>((x%N)+N)%N;
 let pos=0,vel=0,tg=0,raf,last,drag,swiped=false,lp;
 function render(){P.forEach((p,i)=>{const d=wrap(SL[i]-pos),a=Math.min(Math.abs(d),1);
  p.style.transform=`translateX(${d*100}%) scale(${1-.1*a})`;p.style.opacity=1-.7*a;p.style.filter=`blur(${a*10}px)`;p.style.pointerEvents=a<.5?'auto':'none';p.style.visibility=a>=1?'hidden':'visible'})}
@@ -145,7 +144,7 @@ function end(){clearTimeout(lp);if(!drag)return;const d=drag;drag=null;
  if(d.m){swiped=true;setTimeout(()=>swiped=false,60);vel=d.v;go(Math.round(pos+Math.max(-1.2,Math.min(1.2,d.v*.25))))}else go(tg)}
 document.addEventListener('pointerup',end);document.addEventListener('pointercancel',()=>{clearTimeout(lp);if(drag){drag=null;go(Math.round(pos))}});
 document.addEventListener('click',e=>{if(swiped){e.stopPropagation();e.preventDefault()}},true);
-$('#clock').addEventListener('pointerdown',()=>{lp=setTimeout(openSet,800)}); /* tieni premuto l'orologio = impostazioni */
+$('#clock').addEventListener('pointerdown',()=>{lp=setTimeout(openSet,800)});
 /* ---------- meteo ---------- */
 const WC=c=>c==0?['☀️','Sereno']:c<3?['⛅','Poco nuvoloso']:c==3?['☁️','Coperto']:c<50?['🌫️','Nebbia']:c<70?['🌧️','Pioggia']:c<80?['❄️','Neve']:c<95?['🌦️','Rovesci']:['⛈️','Temporale'];
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -174,7 +173,7 @@ function detail(){const[i,t]=WC(WX.c),uv=WX.uv,ul=uv<3?'Basso':uv<6?'Moderato':u
  $('#dp').style.background=bgFor(WX.c);
  $('#detc').innerHTML=`<div class="hero"><h2>${esc(WX.city)}</h2><div class="bt">${WX.t}°</div><div>${i} ${t}</div><div>Max ${WX.max}°  Min ${WX.min}°</div></div>
  <div class="cd"><h4>🕒 Previsioni orarie</h4><div class="hrs">${WX.hours.map((x,k)=>`<div><small>${k?x.h:'Ora'}</small><span>${WC(x.c)[0]}</span><b>${x.t}°</b>${x.p>=20?`<small>${x.p}%</small>`:''}</div>`).join('')}</div></div>
- <div class="cd"><h4>📅 Prossimi giorni</h4>${WX.days.map((x,k)=>`<div class="dr"><span>${k?new Date(x.d+'T12:00').toLocaleDateString('it-IT',{weekday:'long'}):'Oggi'}</span><span>${WC(x.c)[0]}${x.p>=20?`<small>${x.p}%</small>`:''}</span><span>${x.min}°</span><div class="tr"><i style="left:${(x.min-gl)/rg*100}%;width:${Math.max(10,(x.max-x.min)/rg*100)}%"></i></div><span>${x.max}°</span></div>`).join('')}</div>
+ <div class="cd"><h4>📅 Prossimi giorni</h4>${WX.days.map((x,k)=>`<div class="dr"><span>${k?new Date(x.d+'T12:00').toLocaleDateString('it-IT',{weekday:'long'}):'Oggi'}</span><span>${WC(x.c)[0]}${x.p>=20?`<small>${x.p}%</small>`:''}</span><span>${x.min}°</span><div class="tr"><i style="left:${(x.min-gl)/rg*100}%;width:${Math.max(10,(x.max-x.min)/rg*100)}\%"></i></div><span>${x.max}°</span></div>`).join('')}</div>
  <div class="tl">
  <div class="cd"><h4>😎 Indice UV</h4><div class="v">${uv}</div><small>${ul}</small></div>
  <div class="cd"><h4>🌅 Alba e tramonto</h4><div class="v">${WX.sr}</div><small>Tramonto alle ${WX.ss}</small></div>
@@ -182,9 +181,8 @@ function detail(){const[i,t]=WC(WX.c),uv=WX.uv,ul=uv<3?'Basso':uv<6?'Moderato':u
  <div class="cd"><h4>🌧️ Precipitazioni</h4><div class="v">${WX.sum} mm</div><small>Probabilità oggi ${WX.rain}%</small></div>
  <div class="cd"><h4>🌡️ Percepita</h4><div class="v">${WX.f}°</div><small>${df<0?'Più fresca della temperatura reale':df>0?'Più calda della temperatura reale':'Simile alla temperatura reale'}</small></div>
  <div class="cd"><h4>💧 Umidità</h4><div class="v">${WX.hum}%</div><small>Pressione ${WX.press} hPa</small></div></div>`}
-/* effetto genie stile macOS: la finestra è tagliata in strisce che si piegano verso il widget */
 let busy=false,src=null;const NS=28,eo=k=>1-Math.pow(1-k,4),eio=k=>k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;
-function genie(from,to,ms,ease,done){const dp=$('#dp'),b=dp.getBoundingClientRect(),a=(src||$('#wx')).getBoundingClientRect(),
+function genie(from,to,ms,ease,done){const dp=$('#dp'),b=dp.getBoundingClientRect(),a=(src\vert{}\vert{}$('#wx')).getBoundingClientRect(),
  g={px:b.left,py:b.top,pw:b.width,ph:b.height,sh:b.height/NS,pcx:b.left+b.width/2,tx:a.left+a.width/2,ty:a.top+a.height/2,sw:Math.max(a.width*.8,24)};g.dn=g.ty>g.py+g.ph/2;
  const gn=document.createElement('div');gn.id='gn';const st=[];
  for(let i=0;i<NS;i++){const w=document.createElement('div');w.className='gs';w.style.cssText=`width:${g.pw}px;height:${g.sh}px`;
@@ -224,20 +222,28 @@ function notif(){const a=[],t=iso(new Date());upcoming(6).forEach(x=>a.push(['�
  const box=$('#nl');box.innerHTML='';a.filter(x=>!NC.includes(x.join('|'))).forEach(x=>{const d=document.createElement('div');d.className='item';const s=document.createElement('div');s.textContent=x[0]+' '+x[1];const m=document.createElement('small');m.textContent=x[2];s.append(m);d.append(s);box.append(d)});
  if(!box.children.length)box.innerHTML='<div class="item" style="opacity:.6">Nessuna notifica</div>';window._na=a}
 $('#nc').onclick=()=>{NC=(window._na||[]).map(x=>x.join('|'));W('nc',NC);notif()};
-/* ---------- Gemini ---------- */
+/* ---------- Groq (Sostituto Gemini) ---------- */
 let H=[];const chat=$('#chat');
 const md=t=>esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`(.+?)`/g,'<code>$1</code>').replace(/^[*-] (.+)$/gm,'• $1').replace(/\n/g,'<br>');
 function say(t,c,html){const d=document.createElement('div');d.className='msg '+c;html?d.innerHTML=t:d.textContent=t;chat.append(d);chat.scrollTop=1e9;$('#hello').style.display='none';return d}
 ['Che tempo fa oggi?','Cosa ho in agenda?','Come mi vesto oggi?','Riassumi la mia giornata'].forEach(x=>{const b=document.createElement('button');b.textContent=x;b.onclick=()=>{$('#q').value=x;ask()};$('#chips').append(b)});
 async function ask(){const q=$('#q').value.trim();if(!q)return;$('#q').value='';say(q,'u');
- if(!S.key){say('Inserisci la chiave API di Gemini nelle impostazioni (tieni premuto sull\'orologio).','m');return}
- H.push({role:'user',parts:[{text:q}]});const w=say('<span class="dots"><i></i><i></i><i></i></span>','m',true);
+ if(!S.key){say('Inserisci la chiave API di Groq nelle impostazioni (tieni premuto sull\'orologio).','m');return}
+ H.push({role:'user',content:q});const w=say('<span class="dots"><i></i><i></i><i></i></span>','m',true);
  const wx=WX?(({hours,...r})=>JSON.stringify({...r,condizione:WC(WX.c)[1],prossime_ore:(hours||[]).slice(0,12)}))(WX):'non disponibile';
- const ctx=`Sei l'assistente elegante di uno smart display. Rispondi sempre in italiano, in modo naturale e breve (massimo 4 frasi), usando i dati reali qui sotto quando servono e senza inventare nulla.\nData e ora: ${new Date().toLocaleString('it-IT')}.\nMeteo: ${wx}.\nEventi calendario (data → elenco): ${JSON.stringify(E)}.`;
- try{const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(S.model)}:generateContent`,{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':S.key},body:JSON.stringify({systemInstruction:{parts:[{text:ctx}]},contents:H.slice(-12)})});
+ const sysPrompt=`Sei l'assistente elegante di uno smart display. Rispondi sempre in italiano, in modo naturale e breve (massimo 4 frasi), usando i dati reali qui sotto quando servono e senza inventare nulla.\nData e ora: ${new Date().toLocaleString('it-IT')}.\nMeteo: ${wx}.\nEventi calendario (data → elenco): ${JSON.stringify(E)}.`;
+ 
+ const messages = [{role:'system', content: sysPrompt}, ...H.slice(-12)];
+ try{
+  const r=await fetch(`https://api.groq.com/openai/v1/chat/completions`,{
+   method:'POST',
+   headers:{'Content-Type':'application/json','Authorization':'Bearer '+S.key},
+   body:JSON.stringify({model:S.model||'llama-3.3-70b-versatile',messages:messages})
+  });
   const j=await r.json();if(!r.ok)throw new Error(j.error?.message||r.status);
-  const t=j.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('')||'(nessuna risposta)';H.push({role:'model',parts:[{text:t}]});w.innerHTML=md(t)}
- catch(e){H.pop();const m=String(e.message);w.textContent='Errore Gemini: '+m+(/failed to fetch/i.test(m)?' (controlla la connessione)':/api key|permission|401|403/i.test(m)?' — controlla la chiave nelle impostazioni':'')}
+  const t=j.choices?.[0]?.message?.content||'(nessuna risposta)';
+  H.push({role:'assistant',content:t});w.innerHTML=md(t)
+ }catch(e){H.pop();const m=String(e.message);w.textContent='Errore Groq: '+m+(/failed to fetch/i.test(m)?' (controlla la connessione)':/api key|permission|401|403|unauthorized/i.test(m)?' — controlla la chiave nelle impostazioni':'')}
  chat.scrollTop=1e9}
 $('#send').onclick=ask;$('#q').onkeydown=e=>{if(e.key==='Enter')ask()};
 $('#nw').onclick=()=>{H=[];chat.querySelectorAll('.msg').forEach(m=>m.remove());$('#hello').style.display='flex'};
@@ -248,12 +254,18 @@ $('#mic').onclick=()=>{if(!SR){say('Il riconoscimento vocale non è supportato s
 ['#EAB4FF'].length;['#8ab4ff','#ff9f7a','#7ee0b0','#f4d35e','#d49cff'].forEach(c=>{const b=document.createElement('button');b.style.background=c;b.onclick=()=>{S.acc=c;theme()};$('#sw').append(b)});
 function openSet(){$('#sk').value=S.key;$('#sm').value=S.model;$('#sc').value=S.city;$('#sb').value=S.bg;$('#set').classList.add('show')}
 $('#set').onclick=e=>{if(e.target.id==='set')$('#set').classList.remove('show')};
-$('#st').onclick=async()=>{const k=$('#sk').value.trim(),m=$('#sm').value.trim()||'gemini-flash-latest';$('#sr').textContent='Test in corso…';
- try{const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(m)}:generateContent`,{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':k},body:JSON.stringify({contents:[{parts:[{text:'Rispondi solo: ok'}]}]})});
-  const j=await r.json();$('#sr').textContent=r.ok?'✅ Funziona: '+(j.candidates?.[0]?.content?.parts?.[0]?.text||'ok'):'❌ '+(j.error?.message||r.status)}catch(e){$('#sr').textContent='❌ '+e.message}};
+$('#st').onclick=async()=>{const k=$('#sk').value.trim(),m=$('#sm').value.trim()\vert{}\vert{}'llama-3.3-70b-versatile';$('#sr').textContent='Test in corso…';
+ try{
+  const r=await fetch(`https://api.groq.com/openai/v1/chat/completions`,{
+   method:'POST',
+   headers:{'Content-Type':'application/json','Authorization':'Bearer '+k},
+   body:JSON.stringify({model:m,messages:[{role:'user',content:'Rispondi solo: ok'}]})
+  });
+  const j=await r.json();$('#sr').textContent=r.ok?'✅ Funziona: '+(j.choices?.[0]?.message?.content||'ok'):'❌ '+(j.error?.message||r.status)
+ }catch(e){$('#sr').textContent='❌ '+e.message}};
 $('#sb').onchange=()=>{if($('#sb').value==='custom')$('#sf').click()};
 $('#sf').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas'),k=Math.min(1,1920/im.width);c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);W('bgimg',c.toDataURL('image/jpeg',.82));theme()};im.src=r.result};r.readAsDataURL(f)};
-$('#ss').onclick=()=>{const c=S.city;S.key=$('#sk').value.trim();S.model=$('#sm').value.trim()||'gemini-flash-latest';S.city=$('#sc').value.trim();S.bg=$('#sb').value;W('S',S);theme();$('#set').classList.remove('show');if(c!==S.city)weather()};
+$('#ss').onclick=()=>{const c=S.city;S.key=$('#sk').value.trim();S.model=$('#sm').value.trim()\vert{}\vert{}'llama-3.3-70b-versatile';S.city=$('#sc').value.trim();S.bg=$('#sb').value;W('S',S);theme();$('#set').classList.remove('show');if(c!==S.city)weather()};
 /* ---------- avvio / schermo sempre acceso / PWA ---------- */
 let wl;async function lock(){try{wl=await navigator.wakeLock.request('screen')}catch{}}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)lock()});
