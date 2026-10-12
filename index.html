@@ -19,15 +19,11 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 #date{position:absolute;top:6.5vh;width:100%;text-align:center;font-size:2.4vh;font-weight:600;text-transform:capitalize;text-shadow:0 1px 8px rgba(0,0,0,.2)}
 #clock{position:absolute;top:11vh;width:100%;text-align:center;white-space:nowrap;font-size:min(30vh,22vw);line-height:1;font-weight:500;font-stretch:condensed;font-family:"Roboto Condensed","Arial Narrow","SF Pro Display",sans-serif;letter-spacing:-.01em;background:linear-gradient(#fff 20%,rgba(255,255,255,.55));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 6px 24px rgba(0,0,0,.15))}
 #ridge{z-index:2;pointer-events:none}
-.side{position:absolute;right:3vw;bottom:9vh;display:flex;flex-direction:column;gap:2vh;z-index:3}
-.rb{width:7vh;height:7vh;border-radius:50%;font-size:3vh;display:grid;place-items:center;background:var(--g);backdrop-filter:blur(25px);-webkit-backdrop-filter:blur(25px);border:1px solid var(--gb)}
-.rb.on{background:#fff;color:#222}
 #chip{position:absolute;top:4vh;right:3vw;z-index:3;padding:1vh 2vh;font-size:2vh;border-radius:99px}
-#gear{position:absolute;top:4vh;left:3vw;z-index:3}
 #wx{position:absolute;left:4vw;bottom:9vh;z-index:3;padding:2.4vh 3vh;min-width:24vw}
 #wx b{font-size:5vh;font-weight:500}#wx small{display:block;opacity:.85;font-size:1.9vh;margin-top:.4vh}
 /* dock */
-#dock{position:fixed;left:0;right:0;bottom:0;height:10vh;z-index:20;touch-action:none;display:flex;align-items:flex-end;justify-content:center;padding-bottom:1.6vh}
+#dock{position:fixed;left:0;right:0;bottom:0;z-index:20;pointer-events:none;display:flex;justify-content:center;padding-bottom:1.6vh}
 #dock i{width:18vh;height:.6vh;border-radius:9px;background:#fff;opacity:.9;box-shadow:0 1px 6px rgba(0,0,0,.25)}
 /* pages */
 .pad{position:absolute;inset:5vh 4vw 8vh;display:flex;gap:2.5vw}
@@ -47,27 +43,30 @@ select option{color:#000}::placeholder{color:rgba(255,255,255,.6)}
 #chat{flex:1;overflow:auto;display:flex;flex-direction:column;gap:1vh;touch-action:pan-y}
 .msg{max-width:78%;padding:1.2vh 2vh;border-radius:20px;font-size:2.2vh;white-space:pre-wrap;user-select:text}
 .msg.u{align-self:flex-end;background:var(--a);color:#111}.msg.m{align-self:flex-start;background:rgba(255,255,255,.2)}
+#wx,#chip{cursor:pointer}
+#det{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.4);display:none;place-items:center}#det.show{display:grid}
+#det .glass{position:relative;width:min(860px,92vw);max-height:90vh;overflow:auto;padding:3vh;background:rgba(40,40,55,.55);touch-action:pan-y}
+#det .x{position:absolute;top:1.6vh;right:2vh;font-size:2.6vh;width:5vh;height:5vh;border-radius:50%;background:var(--g)}
+.dh{display:flex;justify-content:space-between;align-items:center;gap:2vh;margin:0 6vh 2vh 0}.big{font-size:8vh;font-weight:500}
+.hrs{display:flex;gap:1vh;overflow-x:auto;padding-bottom:1vh;touch-action:pan-x}
+.hrs>div{flex:0 0 9vh;text-align:center;padding:1.2vh 0;border-radius:18px;background:rgba(255,255,255,.14);display:flex;flex-direction:column;gap:.4vh;font-size:2.2vh}.hrs small{font-size:1.6vh;opacity:.75}
+.stg{display:grid;grid-template-columns:repeat(4,1fr);gap:1vh;margin:1.6vh 0}.stg .item{margin:0}
+.dys>div{display:grid;grid-template-columns:1fr 1fr 1fr 1.4fr;padding:1.2vh 2vh;margin-bottom:.8vh;border-radius:16px;background:rgba(255,255,255,.14);font-size:2.2vh}.dys span:last-child{text-align:right}
 /* settings & overlays */
 #set{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.4);display:none;place-items:center}
 #set.show{display:grid}#set .glass{width:min(620px,90vw);max-height:88vh;overflow:auto;padding:3vh;display:grid;gap:1.4vh;background:rgba(40,40,50,.55);touch-action:pan-y}
 label{font-size:1.8vh;opacity:.8}
 .sw{display:flex;gap:1.4vh}.sw button{width:5vh;height:5vh;border-radius:50%;border:2px solid #fff6}
-#sleep{position:fixed;inset:0;z-index:60;background:#000;opacity:0;pointer-events:none;transition:opacity .8s;display:grid;place-items:center;font-size:12vh;font-family:"Roboto Condensed",sans-serif;color:#333}
-#sleep.on{opacity:.94;pointer-events:auto}
-#white{position:fixed;inset:0;z-index:55;background:#fff;display:none}
 </style></head>
 <body>
 <div id="bg">
 <svg class="sc" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMax slice"><g id="rg" transform="translate(0,120)"><path class="m2" d="M0 520L120 450 220 500 360 400 520 490 700 380 900 480 1100 370 1300 470 1450 420 1600 480V1000H0Z"/><path class="m1" d="M0 620L180 530 330 600 520 480 760 600 980 510 1200 610 1400 540 1600 610V1000H0Z"/></g><path class="d1" transform="translate(0,60)" d="M0 760Q400 680 800 740T1600 720V1000H0Z"/><path class="d2" transform="translate(0,60)" d="M0 880Q500 800 1000 860T1600 830V1000H0Z"/></svg></div>
 
 <section class="page" id="p0">
-<button id="gear" class="rb">⚙︎</button>
 <div id="date"></div><div id="clock"></div>
 <div id="chip" class="glass">📶 <span id="chipT">--°</span></div>
 <svg id="ridge" class="sc" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMax slice"><use href="#rg"/></svg>
 <div id="wx" class="glass"><b id="wT">--°</b><small id="wD">Caricamento meteo…</small><small id="wN"></small></div>
-<div class="side"><button class="rb" id="bMoon">🌙</button><button class="rb" id="bTorch">🔦</button><button class="rb" id="bCam">📷</button></div>
-<input type="file" id="camIn" accept="image/*" capture="environment" hidden>
 </section>
 
 <section class="page" id="p1"><div class="pad">
@@ -86,17 +85,17 @@ label{font-size:1.8vh;opacity:.8}
 <h2>Impostazioni</h2>
 <label>Chiave API Gemini (resta solo su questo dispositivo)</label><input id="sk" type="password" placeholder="AIza…">
 <label>Modello Gemini</label><input id="sm" placeholder="gemini-2.5-flash">
-<label>Città per il meteo</label><input id="sc" placeholder="Roma">
+<label>Posizione meteo (vuoto = automatica via GPS)</label><input id="sc" placeholder="Automatica · oppure scrivi una città">
 <label>Sfondo</label><select id="sb"><option value="auto">Automatico (giorno/notte)</option><option value="day">Deserto giorno</option><option value="night">Deserto notte</option><option value="custom">Immagine personale…</option></select>
 <input type="file" id="sf" accept="image/*" style="display:none">
 <label>Colore d'accento</label><div class="sw" id="sw"></div>
 <button class="btn" id="ss">Salva e chiudi</button></div></div>
-<div id="sleep"></div><div id="white"></div>
+<div id="det"><div class="glass"><button class="x">✕</button><div id="detc"></div></div></div>
 
 <script>
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const L=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},W=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){alert('Memoria piena')}};
-const S=Object.assign({key:'',model:'gemini-2.5-flash',city:'Roma',bg:'auto',acc:'#8ab4ff'},L('S',{}));
+const S=Object.assign({key:'',model:'gemini-2.5-flash',city:'',bg:'auto',acc:'#8ab4ff'},L('S',{}));
 const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 let E=L('ev',{}),cur=new Date(),sel=iso(new Date()),WX=L('wx',null),NC=L('nc',[]);
 /* ---------- tema ---------- */
@@ -106,31 +105,51 @@ function theme(){const h=new Date().getHours(),n=S.bg==='night'||(S.bg==='auto'&
  $('#bg').style.backgroundImage=c?`url(${img})`:'';}
 /* ---------- orologio ---------- */
 function tick(){const d=new Date();$('#clock').textContent=d.toLocaleTimeString('it-IT',{hour:'numeric',minute:'2-digit'});
- $('#date').textContent=d.toLocaleDateString('it-IT',{weekday:'short',day:'numeric',month:'short'});$('#sleep').textContent=$('#clock').textContent}
+ $('#date').textContent=d.toLocaleDateString('it-IT',{weekday:'short',day:'numeric',month:'short'})}
 setInterval(()=>{tick();if(!(new Date().getSeconds()))theme()},1000);
-/* ---------- pager con molla ---------- */
-const P=$$('.page');let pos=0,vel=0,tg=0,raf,last,drag;
-function render(){P.forEach((p,i)=>{const d=i-pos,a=Math.min(Math.abs(d),1);
- p.style.transform=`translateX(${d*100}%) scale(${1-.1*a})`;p.style.opacity=1-.7*a;p.style.filter=`blur(${a*10}px)`;p.style.pointerEvents=a<.5?'auto':'none';p.style.visibility=a>=1?'hidden':'visible'});
- $$('#dock button').forEach(b=>b.classList.toggle('act',+b.dataset.i===Math.round(pos)))}
+/* ---------- pager circolare con molla, swipe ovunque ---------- */
+const P=$$('.page'),N=P.length,SL=[0,3,2,1],wrap=d=>((d+N/2)%N+N)%N-N/2,mod=x=>((x%N)+N)%N;
+let pos=0,vel=0,tg=0,raf,last,drag,swiped=false,lp;
+function render(){P.forEach((p,i)=>{const d=wrap(SL[i]-pos),a=Math.min(Math.abs(d),1);
+ p.style.transform=`translateX(${d*100}%) scale(${1-.1*a})`;p.style.opacity=1-.7*a;p.style.filter=`blur(${a*10}px)`;p.style.pointerEvents=a<.5?'auto':'none';p.style.visibility=a>=1?'hidden':'visible'})}
 function step(t){const dt=Math.min((t-last)/1000,.032);last=t;vel+=(-170*(pos-tg)-22*vel)*dt;pos+=vel*dt;render();
- if(Math.abs(pos-tg)>.0004||Math.abs(vel)>.002)raf=requestAnimationFrame(step);else{pos=tg;vel=0;render()}}
-function go(i){tg=Math.max(0,Math.min(3,i));cancelAnimationFrame(raf);last=performance.now();raf=requestAnimationFrame(step);if(tg===2)notif()}
-const dk=$('#dock');
-dk.addEventListener('pointerdown',e=>{dk.setPointerCapture(e.pointerId);cancelAnimationFrame(raf);drag={x:e.clientX,p:pos,lx:e.clientX,lt:performance.now(),v:0,m:false}});
-dk.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x;if(Math.abs(dx)>8)drag.m=true;if(!drag.m)return;
- let p=drag.p-dx/innerWidth*1.6;if(p<0)p*=.35;if(p>3)p=3+(p-3)*.35;pos=p;const n=performance.now();drag.v=-(e.clientX-drag.lx)/innerWidth*1.6/((n-drag.lt)/1000||1);drag.lx=e.clientX;drag.lt=n;render()});
-dk.addEventListener('pointerup',e=>{if(!drag)return;const d=drag;drag=null;
- if(d.m){vel=d.v;go(Math.round(pos+Math.max(-1.2,Math.min(1.2,d.v*.25))))}
- else{const b=e.target.closest('button');b?go(+b.dataset.i):go(0)}});
+ if(Math.abs(pos-tg)>.0004||Math.abs(vel)>.002)raf=requestAnimationFrame(step);else{pos=tg=mod(tg);vel=0;render()}}
+function go(i){tg=i;cancelAnimationFrame(raf);last=performance.now();raf=requestAnimationFrame(step);if(mod(tg)===2)notif()}
+document.addEventListener('pointerdown',e=>{if(e.target.closest('input,select,#set,#det'))return;cancelAnimationFrame(raf);
+ drag={x:e.clientX,y:e.clientY,p:pos,lx:e.clientX,lt:performance.now(),v:0,m:false}});
+document.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
+ if(!drag.m){if(Math.abs(dx)<12&&Math.abs(dy)<12)return;if(Math.abs(dy)>Math.abs(dx)){drag=null;go(tg);return}drag.m=true;clearTimeout(lp);try{document.body.setPointerCapture(e.pointerId)}catch{}}
+ pos=drag.p-dx/innerWidth*1.2;const n=performance.now();drag.v=-(e.clientX-drag.lx)/innerWidth*1.2/((n-drag.lt)/1000||1);drag.lx=e.clientX;drag.lt=n;render()});
+function end(){clearTimeout(lp);if(!drag)return;const d=drag;drag=null;
+ if(d.m){swiped=true;setTimeout(()=>swiped=false,60);vel=d.v;go(Math.round(pos+Math.max(-1.2,Math.min(1.2,d.v*.25))))}else go(tg)}
+document.addEventListener('pointerup',end);document.addEventListener('pointercancel',()=>{clearTimeout(lp);if(drag){drag=null;go(Math.round(pos))}});
+document.addEventListener('click',e=>{if(swiped){e.stopPropagation();e.preventDefault()}},true);
+$('#clock').addEventListener('pointerdown',()=>{lp=setTimeout(openSet,800)}); /* tieni premuto l'orologio = impostazioni */
 /* ---------- meteo ---------- */
 const WC=c=>c==0?['☀️','Sereno']:c<3?['⛅','Poco nuvoloso']:c==3?['☁️','Coperto']:c<50?['🌫️','Nebbia']:c<70?['🌧️','Pioggia']:c<80?['❄️','Neve']:c<95?['🌦️','Rovesci']:['⛈️','Temporale'];
-async function weather(){try{const g=await(await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(S.city)}&count=1&language=it`)).json();const r=g.results[0];
- const w=await(await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${r.latitude}&longitude=${r.longitude}&current=temperature_2m,apparent_temperature,weather_code&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&forecast_days=3`)).json();
- WX={city:r.name,t:Math.round(w.current.temperature_2m),f:Math.round(w.current.apparent_temperature),c:w.current.weather_code,max:Math.round(w.daily.temperature_2m_max[0]),min:Math.round(w.daily.temperature_2m_min[0]),rain:w.daily.precipitation_probability_max[0],rain1:w.daily.precipitation_probability_max[1],at:Date.now()};W('wx',WX)}catch(e){}
- showWx()}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const gps=()=>new Promise(r=>{if(!navigator.geolocation)return r(null);navigator.geolocation.getCurrentPosition(p=>r({lat:p.coords.latitude,lon:p.coords.longitude}),()=>r(null),{timeout:10000,maximumAge:600000})});
+async function weather(){try{let la,lo,name;
+ if(S.city){const g=await(await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(S.city)}&count=1&language=it`)).json();const r=g.results[0];la=r.latitude;lo=r.longitude;name=r.name}
+ else{const p=await gps()||L('geo',null);if(!p)throw 0;la=p.lat;lo=p.lon;W('geo',p);
+  try{const g=await(await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${la}&longitude=${lo}&localityLanguage=it`)).json();name=g.city||g.locality||g.principalSubdivision}catch{}name=name||'La tua posizione'}
+ const w=await(await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${la}&longitude=${lo}&current=temperature_2m,apparent_temperature,weather_code,relative_humidity_2m,wind_speed_10m,pressure_msl&hourly=temperature_2m,precipitation_probability,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,sunrise,sunset,uv_index_max&timezone=auto&forecast_days=4`)).json();
+ const H=w.hourly,D=w.daily,c=w.current,hi=Math.max(0,H.time.findIndex(t=>t>=c.time.slice(0,13)+':00'));
+ WX={city:name,t:Math.round(c.temperature_2m),f:Math.round(c.apparent_temperature),c:c.weather_code,hum:c.relative_humidity_2m,wind:Math.round(c.wind_speed_10m),press:Math.round(c.pressure_msl),
+  max:Math.round(D.temperature_2m_max[0]),min:Math.round(D.temperature_2m_min[0]),rain:D.precipitation_probability_max[0],rain1:D.precipitation_probability_max[1],sum:D.precipitation_sum[0],uv:D.uv_index_max[0],sr:D.sunrise[0].slice(11),ss:D.sunset[0].slice(11),
+  hours:H.time.slice(hi,hi+24).map((t,i)=>({h:t.slice(11,13),t:Math.round(H.temperature_2m[hi+i]),c:H.weather_code[hi+i],p:H.precipitation_probability[hi+i]})),
+  days:D.time.map((t,i)=>({d:t,c:D.weather_code[i],max:Math.round(D.temperature_2m_max[i]),min:Math.round(D.temperature_2m_min[i]),p:D.precipitation_probability_max[i]})),at:Date.now()};
+ W('wx',WX)}catch(e){}showWx()}
 function showWx(){if(!WX)return;const[i,t]=WC(WX.c);$('#wT').textContent=`${i} ${WX.t}°`;$('#chipT').textContent=WX.t+'°';
- $('#wD').textContent=`${WX.city} · ${t} · percepita ${WX.f}°`;$('#wN').textContent=`Max ${WX.max}° / Min ${WX.min}° · Pioggia ${WX.rain}%`}
+ $('#wD').textContent=`${WX.city} · ${t} · percepita ${WX.f}°`;lockNext()}
+function detail(){if(!WX||!WX.hours)return;const[i,t]=WC(WX.c);
+ const st=[['💧','Umidità',WX.hum+'%'],['💨','Vento',WX.wind+' km/h'],['🌡️','Pressione',WX.press+' hPa'],['😎','Indice UV',WX.uv],['🌅','Alba',WX.sr],['🌇','Tramonto',WX.ss],['🌧️','Prob. pioggia',WX.rain+'%'],['☔','Precipitazioni',WX.sum+' mm']];
+ $('#detc').innerHTML=`<div class="dh"><div><h2 style="margin:0">${esc(WX.city)}</h2><div style="opacity:.85;font-size:2.2vh">${t} · percepita ${WX.f}°</div></div><div class="big">${i} ${WX.t}°</div><div style="text-align:right;font-size:2.4vh">Max ${WX.max}°<br>Min ${WX.min}°</div></div>
+ <div class="hrs">${WX.hours.map((x,k)=>`<div><small>${k?x.h+':00':'Ora'}</small><span>${WC(x.c)[0]}</span><b>${x.t}°</b><small>💧${x.p}%</small></div>`).join('')}</div>
+ <div class="stg">${st.map(x=>`<div class="item"><div><small>${x[0]} ${x[1]}</small>${x[2]}</div></div>`).join('')}</div>
+ <div class="dys">${WX.days.map((x,k)=>`<div><span>${k?new Date(x.d+'T12:00').toLocaleDateString('it-IT',{weekday:'long'}):'Oggi'}</span><span>${WC(x.c)[0]}</span><span>💧${x.p}%</span><span>${x.min}° / ${x.max}°</span></div>`).join('')}</div>`;
+ $('#det').classList.add('show')}
+$('#wx').onclick=$('#chip').onclick=detail;$('#det').onclick=e=>{if(e.target.id==='det'||e.target.closest('.x'))$('#det').classList.remove('show')};
 /* ---------- calendario ---------- */
 function cal(){const y=cur.getFullYear(),m=cur.getMonth(),f=(new Date(y,m,1).getDay()+6)%7,n=new Date(y,m+1,0).getDate(),td=iso(new Date());
  $('#mt').textContent=cur.toLocaleDateString('it-IT',{month:'long',year:'numeric'});let h=['L','M','M','G','V','S','D'].map(x=>`<b>${x}</b>`).join('')+'<i></i>'.repeat(f);
@@ -162,20 +181,13 @@ async function ask(){const q=$('#q').value.trim();if(!q)return;$('#q').value='';
   const j=await r.json();if(!r.ok)throw new Error(j.error?.message||r.status);const t=j.candidates?.[0]?.content?.parts?.map(p=>p.text).join('')||'(nessuna risposta)';
   H.push({role:'model',parts:[{text:t}]});w.textContent=t}catch(e){H.pop();w.textContent='Errore: '+e.message}chat.scrollTop=1e9}
 $('#send').onclick=ask;$('#q').onkeydown=e=>{if(e.key==='Enter')ask()};
-/* ---------- lock: pulsanti ---------- */
-let tOn=false,ts;
-$('#bTorch').onclick=async()=>{tOn=!tOn;$('#bTorch').classList.toggle('on',tOn);
- try{if(tOn){ts=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});await ts.getVideoTracks()[0].applyConstraints({advanced:[{torch:true}]})}else ts?.getTracks().forEach(t=>t.stop());$('#white').style.display='none'}
- catch(e){ts?.getTracks().forEach(t=>t.stop());$('#white').style.display=tOn?'block':'none'}};
-$('#white').onclick=()=>$('#bTorch').click();
-$('#bCam').onclick=()=>$('#camIn').click();
-$('#bMoon').onclick=()=>$('#sleep').classList.add('on');$('#sleep').onclick=()=>$('#sleep').classList.remove('on');
 /* ---------- impostazioni ---------- */
 ['#EAB4FF'].length;['#8ab4ff','#ff9f7a','#7ee0b0','#f4d35e','#d49cff'].forEach(c=>{const b=document.createElement('button');b.style.background=c;b.onclick=()=>{S.acc=c;theme()};$('#sw').append(b)});
-$('#gear').onclick=()=>{$('#sk').value=S.key;$('#sm').value=S.model;$('#sc').value=S.city;$('#sb').value=S.bg;$('#set').classList.add('show')};
+function openSet(){$('#sk').value=S.key;$('#sm').value=S.model;$('#sc').value=S.city;$('#sb').value=S.bg;$('#set').classList.add('show')}
+$('#set').onclick=e=>{if(e.target.id==='set')$('#set').classList.remove('show')};
 $('#sb').onchange=()=>{if($('#sb').value==='custom')$('#sf').click()};
 $('#sf').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas'),k=Math.min(1,1920/im.width);c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);W('bgimg',c.toDataURL('image/jpeg',.82));theme()};im.src=r.result};r.readAsDataURL(f)};
-$('#ss').onclick=()=>{const c=S.city;S.key=$('#sk').value.trim();S.model=$('#sm').value.trim()||'gemini-2.5-flash';S.city=$('#sc').value.trim()||'Roma';S.bg=$('#sb').value;W('S',S);theme();$('#set').classList.remove('show');if(c!==S.city)weather()};
+$('#ss').onclick=()=>{const c=S.city;S.key=$('#sk').value.trim();S.model=$('#sm').value.trim()||'gemini-2.5-flash';S.city=$('#sc').value.trim();S.bg=$('#sb').value;W('S',S);theme();$('#set').classList.remove('show');if(c!==S.city)weather()};
 /* ---------- avvio / schermo sempre acceso / PWA ---------- */
 let wl;async function lock(){try{wl=await navigator.wakeLock.request('screen')}catch{}}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)lock()});
